@@ -13,9 +13,7 @@ export const socketApi = createApi({
   }),
   endpoints: (builder) => ({
     getSupportedChains: builder.query({
-      query: () => ({
-        url: `supported/chains`,
-      })
+      query: () => `supported/chains`,
     }),
     getUserTokenBalances: builder.query({
       query: ({userAddress}) => `balances?userAddress=${userAddress}`,
