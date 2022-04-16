@@ -32,6 +32,9 @@ export const socketApi = createApi({
     getFromTokenList: builder.query({
       query: ({fromChainId, isShortList}) => `from-token-list?fromChainId=${fromChainId}&isShortList=${isShortList}`,
     }),
+    getToTokenList: builder.query({
+      query: ({fromChainId, toChainId, isShortList}) => `to-token-list?fromChainId=${fromChainId}&toChainId=${toChainId}&isShortList=${isShortList}`,
+    }),
   }),
 })
 
@@ -44,4 +47,5 @@ export const {
   useGetGasPriceByChainIdQuery,
   useGetTokenPriceByTokenAddressQuery,
   useGetFromTokenListQuery,
+  useGetToTokenListQuery,
 } = socketApi
