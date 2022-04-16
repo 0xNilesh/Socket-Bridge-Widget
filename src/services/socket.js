@@ -23,9 +23,17 @@ export const socketApi = createApi({
     getTokenBalanceByTokenAddress: builder.query({
       query: (tokenAddress) => `token-balance?tokenAddress=${tokenAddress}`,
     }),
+    getGasPriceByChainId: builder.query({
+      query: (chainId) => `gas-price?chainId=${chainId}`,
+    }),
   }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetSupportedChainsQuery, useGetUserTokenBalancesQuery, useGetTokenBalanceByTokenAddressQuery } = socketApi
+export const {
+  useGetSupportedChainsQuery,
+  useGetUserTokenBalancesQuery,
+  useGetTokenBalanceByTokenAddressQuery,
+  useGetGasPriceByChainIdQuery,
+} = socketApi
