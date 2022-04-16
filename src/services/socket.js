@@ -18,16 +18,19 @@ export const socketApi = createApi({
       })
     }),
     getUserTokenBalances: builder.query({
-      query: (userAddress) => `balances?userAddress=${userAddress}`,
+      query: ({userAddress}) => `balances?userAddress=${userAddress}`,
     }),
     getTokenBalanceByTokenAddress: builder.query({
-      query: (tokenAddress) => `token-balance?tokenAddress=${tokenAddress}`,
+      query: ({tokenAddress}) => `token-balance?tokenAddress=${tokenAddress}`,
     }),
     getTokenPriceByTokenAddress: builder.query({
-      query: (tokenAddress) => `token-price?tokenAddress=${tokenAddress}`,
+      query: ({tokenAddress}) => `token-price?tokenAddress=${tokenAddress}`,
     }),
     getGasPriceByChainId: builder.query({
-      query: (chainId) => `gas-price?chainId=${chainId}`,
+      query: ({chainId}) => `gas-price?chainId=${chainId}`,
+    }),
+    getFromTokenList: builder.query({
+      query: ({fromChainId, isShortList}) => `from-token-list?fromChainId=${fromChainId}&isShortList=${isShortList}`,
     }),
   }),
 })
@@ -40,4 +43,5 @@ export const {
   useGetTokenBalanceByTokenAddressQuery,
   useGetGasPriceByChainIdQuery,
   useGetTokenPriceByTokenAddressQuery,
+  useGetFromTokenListQuery,
 } = socketApi
