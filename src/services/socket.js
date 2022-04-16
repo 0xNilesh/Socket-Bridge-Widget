@@ -23,6 +23,9 @@ export const socketApi = createApi({
     getTokenBalanceByTokenAddress: builder.query({
       query: (tokenAddress) => `token-balance?tokenAddress=${tokenAddress}`,
     }),
+    getTokenPriceByTokenAddress: builder.query({
+      query: (tokenAddress) => `token-price?tokenAddress=${tokenAddress}`,
+    }),
     getGasPriceByChainId: builder.query({
       query: (chainId) => `gas-price?chainId=${chainId}`,
     }),
@@ -36,4 +39,5 @@ export const {
   useGetUserTokenBalancesQuery,
   useGetTokenBalanceByTokenAddressQuery,
   useGetGasPriceByChainIdQuery,
+  useGetTokenPriceByTokenAddressQuery,
 } = socketApi
