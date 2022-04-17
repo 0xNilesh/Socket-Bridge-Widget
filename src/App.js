@@ -20,7 +20,9 @@ const App = () => {
   return (
     <>
       <button onClick={() => connectWallet()}>{address ? address : 'Connect Wallet'}</button>
-      <BridgeWidget address={address} provider={provider}/>
+      <div style={{margin:'50px'}}>
+        <BridgeWidget address={address} provider={provider} />
+      </div>
     </>
   )
 }
