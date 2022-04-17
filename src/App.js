@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ethers } from "ethers";
+import BridgeWidget from "./widgets/BridgeWidget";
 
 const App = () => {
   const [address, setAddress] = useState('');
@@ -19,6 +20,7 @@ const App = () => {
   return (
     <>
       <button onClick={() => connectWallet()}>{address ? address : 'Connect Wallet'}</button>
+      <BridgeWidget address={address} provider={provider}/>
     </>
   )
 }
