@@ -1,16 +1,26 @@
-import { useGetSupportedChainsQuery } from "./services/socket";
+import { useState } from "react";
+import { ethers } from "ethers";
 
 const App = () => {
-  const { data, error, isLoading } = useGetSupportedChainsQuery();
+  const [address, setAddress] = useState('');
+  const [provider, setProvider] = useState('');
 
-  return (<div>
-    {isLoading && (<>Loading...</>)}
-    {error && (<>Error...</>)}
-    {data ? <>
-      <div>data fetched successfully</div>
-      {console.log(data?.result)}
-    </> : <>no data</>}
-  </div>);
+  const connectWallet = async () => {
+    // A Web3Provider wraps a standard Web3 provider, which is
+    // what MetaMask injects as window.ethereum into each page
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    setProvider(provider);
+
+    // MetaMask requires requesting permission to connect users accounts
+    const response = await provider.send("eth_requestAccounts", []);
+    setAddress(response[0]);
+  }
+
+  return (
+    <>
+      <button onClick={() => connectWallet()}>{address ? address : 'Connect Wallet'}</button>
+    </>
+  )
 }
 
 export default App;
