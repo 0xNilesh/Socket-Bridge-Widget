@@ -1,6 +1,8 @@
 .sbw-container {
   --primary: #17161B;
   --secondary: #2C2C32;
+  --neutral: #9DA0A6;
+  --grey: #45464a;
   --white: #fff;
 }
 
@@ -70,4 +72,69 @@
   font-weight: 500;
   letter-spacing: normal;
   color: var(--white);
+}
+
+.sbw-chains-select-box {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(min-content, max-content);
+  gap: 12px;
+  align-items: center;
+  justify-content: initial;
+  grid-template-columns: 1fr 36px 1fr;
+}
+
+.sbw-chains-select-box fieldset {
+  color: var(--neutral);
+  background-color: var(--secondary);
+  padding: 7px 11px;
+  border: 1px solid var(--grey);
+  border-radius: 8px;
+}
+
+.sbw-fieldset {
+  box-sizing: border-box;
+}
+
+.sbw-fieldset:hover {
+  background-color: var(--primary);
+}
+
+.sbw-grid-col-box {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: minmax(0px, auto);
+}
+
+.sbw-grid-col-box label{
+  display: block;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  letter-spacing: -0.2px;
+  color: inherit;
+}
+
+.sbw-arrow-button {
+  background-color: var(--primary);
+  color: var(--white);
+  border: 1px solid var(--grey);
+  border-radius: 8px;
+  height: 36px;
+  min-width: 36px;
+  width: 36px;
+  padding: 0px;
+}
+
+.sbw-icon-box-1 {
+  display: inline-block;
+  vertical-align: bottom;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.sbw-arrow-button:hover {
+  background-color: var(--secondary);
+  cursor: pointer;
 }

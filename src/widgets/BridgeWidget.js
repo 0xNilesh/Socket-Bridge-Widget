@@ -1,6 +1,7 @@
 import { setUserAddress} from "../redux/slice/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import React from "react";
+import { ReactComponent as ArrowSvg } from "../assets/right-arrow.svg";
 import "./BridgeWidget.css";
 
 import { useGetSupportedChainsQuery } from "../services/socket";
@@ -43,6 +44,24 @@ const BridgeWidget = ({ address, provider }) => {
                 <input type="radio" value="time" name="bridgeSortType" />
                 <div className="sbw-hidden-box"></div>
               </label>
+            </div>
+            <div></div>
+            <div className="sbw-chains-select-box">
+              <fieldset className="sbw-fieldset">
+                <div className="sbw-grid-col-box">
+                  <label>From Network</label>
+                </div>
+              </fieldset>
+              <button className="sbw-arrow-button">
+                <div className="sbw-icon-box-1">
+                  <ArrowSvg />
+                </div>
+              </button>
+              <fieldset className="sbw-fieldset">
+                <div className="sbw-grid-col-box">
+                  <label>To Network</label>
+                </div>
+              </fieldset>
             </div>
           </div>
         </form>
