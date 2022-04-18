@@ -18,7 +18,7 @@ const getChainDataByChainId = (chains) => {
 const BridgeWidget = ({ address, provider }) => {
   const dispatch = useDispatch();
   const chains = useGetSupportedChainsQuery();
-  const [chainsByChainId, chainsByNameToId ] = getChainDataByChainId(chains.data?.result);
+  const [chainsByChainId, chainsByNameToId] = getChainDataByChainId(chains.data?.result);
   console.log(chainsByChainId);
   console.log(chainsByNameToId);
 
@@ -29,8 +29,23 @@ const BridgeWidget = ({ address, provider }) => {
 
   return (
     <>
-      <div className="sbw-outer-box">
-
+      <div className="sbw-container sbw-outer-box">
+        <form>
+          <div className="sbw-inner-box">
+            <div className="sbw-switch-bridge-type">
+              <label>
+                <div className="sbw-box-1">Max Received</div>
+                <input type="radio" value="amount" name="bridgeSortType" checked />
+                <div className="sbw-hidden-box"></div>
+              </label>
+              <label>
+                <div className="sbw-box-1">Fastest Transfer</div>
+                <input type="radio" value="time" name="bridgeSortType" />
+                <div className="sbw-hidden-box"></div>
+              </label>
+            </div>
+          </div>
+        </form>
       </div>
     </>
   )
