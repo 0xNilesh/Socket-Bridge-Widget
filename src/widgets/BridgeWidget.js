@@ -45,13 +45,18 @@ const BridgeWidget = ({ address, provider }) => {
     }
   }
 
+  const cont = document.getElementById("socket-bridge-widget-container");
+  if (cont) {
+    console.log(cont.clientWidth - 48);
+  }
+
   const switchBridgeSortType = () => {
     setBridgeSortTypeRadio(bridgeSortTypeRadio === 'amount' ? 'time' : 'amount');
   }
 
   return (
     <>
-      <div className="sbw-container sbw-outer-box">
+      <div className="sbw-container sbw-outer-box" id="socket-bridge-widget-container">
         <form>
           <div className="sbw-inner-box">
             <div className="sbw-switch-bridge-type">
