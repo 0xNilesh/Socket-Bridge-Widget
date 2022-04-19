@@ -77,11 +77,14 @@
 
 .sbw-chains-select-box {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(min-content, max-content);
   gap: 12px;
   align-items: center;
   justify-content: initial;
+}
+
+.sbw-grid-col-flow {
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(min-content, max-content);
 }
 
 .sbw-grid-col-1 {

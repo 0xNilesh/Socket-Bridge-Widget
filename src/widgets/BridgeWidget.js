@@ -1,6 +1,6 @@
 import { setUserAddress} from "../redux/slice/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ReactComponent as RightArrowSvg } from "../assets/right-arrow.svg";
 import { ReactComponent as DownArrowSvg } from "../assets/down-arrow.svg";
 import "./BridgeWidget.css";
@@ -19,15 +19,29 @@ const getChainDataByChainId = (chains) => {
 
 const BridgeWidget = ({ address, provider }) => {
   const dispatch = useDispatch();
+  const ref = useRef(null);
   const chains = useGetSupportedChainsQuery();
+  
   const [chainsByChainId, chainsByNameToId, chainsByChainIdArr] = getChainDataByChainId(chains.data?.result);
-  console.log(chainsByChainId);
-  console.log(chainsByNameToId);
-  console.log(chainsByChainIdArr);
+  // console.log(chainsByChainId);
+  // console.log(chainsByNameToId);
+  // console.log(chainsByChainIdArr);
 
   const [fromChain, setFromChain] = useState(1);
   const [toChain, setToChain] = useState(137);
   const [bridgeSortTypeRadio, setBridgeSortTypeRadio] = useState('amount');
+
+  const [width, setWidth] = useState(window.innerWidth);
+	useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    }
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    }
+	}, []);
 
   // React.useEffect(() => {
   //   if (!address) return;
@@ -49,10 +63,30 @@ const BridgeWidget = ({ address, provider }) => {
     swap();
   }
 
-  const cont = document.getElementById("socket-bridge-widget-container");
-  if (cont) {
-    console.log(cont.clientWidth - 48);
+  const sz = ref.current?.offsetWidth;
+  const box = document.querySelector('.sbw-chains-select-box');
+  if (box) {
+    if (sz > 400) {
+      box.classList.add('sbw-grid-col-1');
+      box.classList.add('sbw-grid-col-flow');
+    } else {
+      box.classList.remove('sbw-grid-col-1');
+      box.classList.remove('sbw-grid-col-flow');
+    }
   }
+
+  // useEffect(() => {
+  //   console.log("width", ref.current.offsetWidth);
+  //   setWidth(ref.current?.offsetWidth)
+  // }, [width]);
+
+  // React.useEffect(() => {
+  //   const cont = document.getElementById("socket-bridge-widget-container");
+  //   if (cont) {
+  //     console.log(cont.clientWidth - 48);
+  //     setContainerSize(cont);
+  //   }
+  // }, [containerSize])
 
   const switchBridgeSortType = () => {
     setBridgeSortTypeRadio(bridgeSortTypeRadio === 'amount' ? 'time' : 'amount');
@@ -78,7 +112,7 @@ const BridgeWidget = ({ address, provider }) => {
 
   return (
     <>
-      <div className="sbw-container sbw-outer-box" id="socket-bridge-widget-container">
+      <div className="sbw-container sbw-outer-box" id="socket-bridge-widget-container" ref={ref}>
         <form>
           <div className="sbw-inner-box">
             <div className="sbw-switch-bridge-type">
@@ -106,7 +140,7 @@ const BridgeWidget = ({ address, provider }) => {
               </label>
             </div>
             <div></div>
-            <div className="sbw-chains-select-box sbw-grid-col-1">
+            <div className="sbw-chains-select-box">
               <fieldset className="sbw-fieldset">
                 <div className="sbw-grid-col-box">
                   <label>From Network</label>
@@ -146,11 +180,15 @@ const BridgeWidget = ({ address, provider }) => {
                   </div>
                 </div>
               </fieldset>
-              <button className="sbw-arrow-button" onClick={(e) => swapChains(e)}>
-                <div className="sbw-icon-box-1">
-                  <RightArrowSvg />
-                </div>
-              </button>
+  
+              {sz > 400 &&
+                <button className="sbw-arrow-button" onClick={(e) => swapChains(e)} >
+                  <div className="sbw-icon-box-1">
+                    <RightArrowSvg />
+                  </div>
+                </button>
+              }
+              
               <fieldset className="sbw-fieldset">
                 <div className="sbw-grid-col-box">
                   <label>To Network</label>
