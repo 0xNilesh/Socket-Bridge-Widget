@@ -34,15 +34,19 @@ const BridgeWidget = ({ address, provider }) => {
   //   dispatch(setUserAddress(address));
   // })
 
-  const swapChains = (e) => {
-    e.preventDefault();
-    if (!chainsByChainId) return;
+  const swap = () => {
     if (chainsByChainId[fromChain].receivingEnabled === true &&
       chainsByChainId[toChain].sendingEnabled === true) {
       const from = fromChain, to = toChain;
       setFromChain(to);
       setToChain(from);
     }
+  }
+
+  const swapChains = (e) => {
+    e.preventDefault();
+    if (!chainsByChainId) return;
+    swap();
   }
 
   const cont = document.getElementById("socket-bridge-widget-container");
@@ -52,6 +56,24 @@ const BridgeWidget = ({ address, provider }) => {
 
   const switchBridgeSortType = () => {
     setBridgeSortTypeRadio(bridgeSortTypeRadio === 'amount' ? 'time' : 'amount');
+  }
+
+  const changeFromChain = (value) => {
+    if (fromChain == value) return;
+    if (toChain == value) {
+      swap();
+    } else {
+      setFromChain(value);
+    }
+  }
+
+  const changeToChain = (value) => {
+    if (toChain == value) return;
+    if (fromChain == value) {
+      swap();
+    } else {
+      setToChain(value);
+    }
   }
 
   return (
@@ -99,7 +121,7 @@ const BridgeWidget = ({ address, provider }) => {
                             id="inputChainId"
                             name="inputChainId"
                             className="sbw-chain-select sbw-outline-none"
-                            onChange={(el) => {setFromChain(el.target.value)}}
+                            onChange={(el) => {changeFromChain(el.target.value)}}
                           >
                             {chainsByChainIdArr != undefined && chainsByChainIdArr.map(chain => {
                               if (chain.sendingEnabled !== true) return;
@@ -116,7 +138,7 @@ const BridgeWidget = ({ address, provider }) => {
                             })}
                           </select>
                           <div className="sbw-down-arrow-box">
-                            <DownArrowSvg style={{transform: 'rotate(90deg)'}}/>
+                            <DownArrowSvg className="sbw-down-arrow-icon"/>
                           </div>
                         </div>
                       </div>
@@ -143,7 +165,7 @@ const BridgeWidget = ({ address, provider }) => {
                             id="inputChainId"
                             name="inputChainId"
                             className="sbw-chain-select sbw-outline-none"
-                            onChange={(el) => {setToChain(el.target.value)}}
+                            onChange={(el) => {changeToChain(el.target.value)}}
                           >
                             {chainsByChainIdArr != undefined && chainsByChainIdArr.map(chain => {
                               if (chain.receivingEnabled !== true) return;
@@ -160,7 +182,7 @@ const BridgeWidget = ({ address, provider }) => {
                             })}
                           </select>
                           <div className="sbw-down-arrow-box">
-                            <DownArrowSvg style={{transform: 'rotate(90deg)'}}/>
+                            <DownArrowSvg className="sbw-down-arrow-icon"/>
                           </div>
                         </div>
                       </div>

@@ -3,6 +3,7 @@
   --secondary: #2C2C32;
   --neutral: #9DA0A6;
   --grey: #45464a;
+  --blue: #0488CC;
   --white: #fff;
 }
 
@@ -213,4 +214,8 @@
   pointer-events: none;
   top: 0;
   right: 0;
+}
+
+.sbw-down-arrow-icon {
+  transform: rotate(90deg);
 }
