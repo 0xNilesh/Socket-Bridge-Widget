@@ -115,6 +115,7 @@ const BridgeWidget = ({ address, provider }) => {
       <div className="sbw-container sbw-outer-box" id="socket-bridge-widget-container" ref={ref}>
         <form>
           <div className="sbw-inner-box">
+            {/* Bridge Sort Type */}
             <div className="sbw-switch-bridge-type">
               <label>
                 <div className="sbw-box-1">Max Received</div>
@@ -140,8 +141,10 @@ const BridgeWidget = ({ address, provider }) => {
               </label>
             </div>
             <div></div>
+
+            {/* Chain select */}
             <div className="sbw-chains-select-box">
-              <fieldset className="sbw-fieldset">
+              <fieldset className="sbw-fieldset sbw-box-fieldset">
                 <div className="sbw-grid-col-box">
                   <label>From Network</label>
                   <div className="sbw-grid-row-box sbw-grid-col-2">
@@ -189,7 +192,7 @@ const BridgeWidget = ({ address, provider }) => {
                 </button>
               }
               
-              <fieldset className="sbw-fieldset">
+              <fieldset className="sbw-fieldset sbw-box-fieldset">
                 <div className="sbw-grid-col-box">
                   <label>To Network</label>
                   <div className="sbw-grid-row-box sbw-grid-col-2">
@@ -228,6 +231,20 @@ const BridgeWidget = ({ address, provider }) => {
                   </div>
                 </div>
               </fieldset>
+            </div>
+
+            {/* Send Asset Box */}
+            <div className="sbw-grid-col-box">
+              <fieldset className="sbw-box-fieldset">
+                <div className="sbw-grid-col-box">
+                  <label>Send</label>
+                  <div className="sbw-grid-box-1 sbw-grid-col-flow sbw-grid-col-3">
+                    <div className="sbw-text-1"></div>
+                    <div className="sbw-text-1"></div>
+                  </div>
+                </div>
+              </fieldset>
+              <div className="sbw-chains-select-box sbw-grid-col-flow"></div>
             </div>
           </div>
         </form>
