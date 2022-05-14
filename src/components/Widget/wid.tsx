@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import getSupportedChains from "../../services";
 
 const Wid = () => {
-  const { isLoading, data} = useQuery(["chains"], getSupportedChains);
+  const { isLoading, data } = useQuery(["chains"], getSupportedChains);
 
   if (isLoading) console.log("Loading...");
   else console.log('', data);
