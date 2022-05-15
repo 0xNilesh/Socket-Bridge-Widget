@@ -1,24 +1,19 @@
 import axios from "axios";
 
-export interface Props {
-  url: string;
-  apiKey: string;
+const url: string = "https://backend.movr.network/v2";
+
+const ApiClient = () => {
+  const apiKey = sessionStorage.getItem('apiKey');
+  console.log(apiKey);
+  if (!apiKey) return;
+
+  return axios.create({
+    baseURL: url,
+    headers: {
+      "Content-type": "application/json",
+      "API-KEY": apiKey ?? ''
+    },
+  });
 }
-
-let url: string = "";
-let apiKey: string = "";
-
-export const initiateApiClient = ({ url, apiKey }: Props) => {
-  url = url;
-  apiKey = apiKey;
-}
-
-const ApiClient = axios.create({
-  baseURL: url,
-  headers: {
-    "Content-type": "application/json",
-    "API-KEY": apiKey,
-  },
-});
 
 export default ApiClient;

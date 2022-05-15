@@ -1,19 +1,21 @@
 import React from "react";
 import Wid from "./wid";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { initiateApiClient } from "../../api";
+import { QueryClient, QueryClientProvider } from "react-query"
 
 const queryClient = new QueryClient();
-const BASE_URL = "https://backend.movr.network/v2";
 
-const Widget = (apiKey: string) => {
-  initiateApiClient({ url: BASE_URL, apiKey: apiKey });
+type Props = {
+  apiKey: string;
+}
+
+const Widget = ({ apiKey }: Props) => {
+  sessionStorage.setItem('apiKey', apiKey);
 
   return (
     <QueryClientProvider client={queryClient}>
       <div style={{margin:'25px'}}>
         <Wid />
-      </div>  
+      </div>
     </QueryClientProvider>
   );
 }

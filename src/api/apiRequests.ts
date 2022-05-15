@@ -7,7 +7,8 @@ export interface RequestProps {
 
 export const getReq = async ({ path }: RequestProps) => {
   try {
-    const response = await ApiClient.get(path);
+    if (!ApiClient) return {error: "Can't get api key from session storage"};
+    const response = await ApiClient()?.get(path);
     return response;
   } catch (error) {
     throw error;
@@ -16,7 +17,8 @@ export const getReq = async ({ path }: RequestProps) => {
 
 export const postReq = async ({ path, body}: RequestProps) => {
   try {
-    const response = await ApiClient.post(path, body);
+    if (!ApiClient) return {error: "Can't get api key from session storage"};
+    const response = await ApiClient()?.post(path, body);
     return response;
   } catch (error) {
     throw error;
