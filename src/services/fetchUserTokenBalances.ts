@@ -1,6 +1,10 @@
 import { RequestProps, getReq } from "../api";
 
-const getUserTokenBalances = async (userAddress: string) => {
+type Props = {
+  userAddress: string;
+}
+
+const getUserTokenBalances = async({userAddress}: Props) => {
   const obj: RequestProps = {
     path: `balances?userAddress=${userAddress}`
   }
