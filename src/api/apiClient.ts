@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url: string = "https://backend.movr.network/v2";
+const BASE_URL: string = "https://backend.movr.network/v2";
 
 const ApiClient = () => {
   const apiKey = sessionStorage.getItem('apiKey');
@@ -8,7 +8,7 @@ const ApiClient = () => {
   if (!apiKey) return;
 
   return axios.create({
-    baseURL: url,
+    baseURL: BASE_URL,
     headers: {
       "Content-type": "application/json",
       "API-KEY": apiKey ?? ''

@@ -1,6 +1,6 @@
 import { RequestProps, getReq } from "../api";
 
-async function getSupportedChains() {
+const getSupportedChains = async () => {
   const obj: RequestProps = {
     path: '/supported/chains'
   }
