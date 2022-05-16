@@ -4,6 +4,7 @@ import { getSupportedChains } from "../../services";
 import { getUserTokenBalances } from "../../services";
 import { getTokenBalanceByTokenAddress } from "../../services";
 import { getTokenPriceByTokenAddress } from "../../services";
+import { getGasPriceByChainId } from "../../services";
 
 const Wid = () => {
   const chainsResponse = useQuery(["chains"], () => getSupportedChains);
@@ -38,6 +39,15 @@ const Wid = () => {
     )
   );
 
+  const gasPrice = useQuery(
+    ["gasPrice"],
+    () => getGasPriceByChainId(
+      {
+        chainId: '1'
+      }
+    )
+  );
+
   if (chainsResponse.isLoading) console.log("Loading...chains");
   else console.log('chain', chainsResponse.data);
 
@@ -49,6 +59,9 @@ const Wid = () => {
 
   if (tokenPrice.isLoading) console.log("Loading...tokenPrice");
   else console.log('tokenPrice', tokenPrice.data);
+
+  if (gasPrice.isLoading) console.log("Loading...gasPrice");
+  else console.log('gasPrice', gasPrice.data);
 
   return <div>Hello</div>;
 }
