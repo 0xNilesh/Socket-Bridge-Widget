@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import { getSupportedChains } from "../../services";
 import { getUserTokenBalances } from "../../services";
 import { getTokenBalanceByTokenAddress } from "../../services";
+import { getTokenPriceByTokenAddress } from "../../services";
 
 const Wid = () => {
   const chainsResponse = useQuery(["chains"], () => getSupportedChains);
@@ -27,6 +28,16 @@ const Wid = () => {
     )
   );
 
+  const tokenPrice = useQuery(
+    ["tokenPrice"],
+    () => getTokenPriceByTokenAddress(
+      {
+        tokenAddress: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+        chainId: '137'
+      }
+    )
+  );
+
   if (chainsResponse.isLoading) console.log("Loading...chains");
   else console.log('chain', chainsResponse.data);
 
@@ -35,6 +46,9 @@ const Wid = () => {
 
   if (tokenBalance.isLoading) console.log("Loading...tokenBalance");
   else console.log('tokenBalance', tokenBalance.data);
+
+  if (tokenPrice.isLoading) console.log("Loading...tokenPrice");
+  else console.log('tokenPrice', tokenPrice.data);
 
   return <div>Hello</div>;
 }
