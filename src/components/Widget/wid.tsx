@@ -1,6 +1,7 @@
 import React from "react";
 import { useQuery } from "react-query";
 import { getSupportedChains } from "../../services";
+import { getSupportedBridges } from "../../services";
 import { getUserTokenBalances } from "../../services";
 import { getTokenBalanceByTokenAddress } from "../../services";
 import { getTokenPriceByTokenAddress } from "../../services";
@@ -48,6 +49,8 @@ const Wid = () => {
     )
   );
 
+  const bridgesResponse = useQuery(["bridges"], () => getSupportedBridges);
+
   if (chainsResponse.isLoading) console.log("Loading...chains");
   else console.log('chain', chainsResponse.data);
 
@@ -62,6 +65,9 @@ const Wid = () => {
 
   if (gasPrice.isLoading) console.log("Loading...gasPrice");
   else console.log('gasPrice', gasPrice.data);
+
+  if (bridgesResponse.isLoading) console.log("Loading...bridges");
+  else console.log('chain', bridgesResponse.data);
 
   return <div>Hello</div>;
 }
