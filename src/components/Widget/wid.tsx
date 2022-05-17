@@ -6,6 +6,7 @@ import { getUserTokenBalances } from "../../services";
 import { getTokenBalanceByTokenAddress } from "../../services";
 import { getTokenPriceByTokenAddress } from "../../services";
 import { getGasPriceByChainId } from "../../services";
+import { getIfTokenSupported } from "../../services";
 
 const Wid = () => {
   const chainsResponse = useQuery(["chains"], () => getSupportedChains);
@@ -49,6 +50,16 @@ const Wid = () => {
     )
   );
 
+  const tokenSupport = useQuery(
+    ["tokenSupport"],
+    () => getIfTokenSupported(
+      {
+        chainId: '10',
+        tokenAddress: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
+      }
+    )
+  )
+
   const bridgesResponse = useQuery(["bridges"], () => getSupportedBridges);
 
   if (chainsResponse.isLoading) console.log("Loading...chains");
@@ -67,7 +78,10 @@ const Wid = () => {
   else console.log('gasPrice', gasPrice.data);
 
   if (bridgesResponse.isLoading) console.log("Loading...bridges");
-  else console.log('chain', bridgesResponse.data);
+  else console.log('bridges', bridgesResponse.data);
+
+  if (tokenSupport.isLoading) console.log("Loading...tokenSupport");
+  else console.log('tokenSupport', tokenSupport.data);
 
   return <div>Hello</div>;
 }

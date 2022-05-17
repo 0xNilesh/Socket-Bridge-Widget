@@ -2,7 +2,7 @@ import { RequestProps, getReq } from "../api";
 
 const getSupportedBridges = async () => {
   const obj: RequestProps = {
-    path: '/supported/chains'
+    path: '/supported/bridges'
   }
   const response = await getReq(obj);
   
