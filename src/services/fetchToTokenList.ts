@@ -13,7 +13,7 @@ const getToTokenList = async({fromChainId, toChainId, isShortList}: Props) => {
   const response = await getReq(obj);
   
   if (!response) {
-    throw new Error("Problem fetching token balance");
+    throw new Error("Problem fetching to token list");
   }
   return response;
 }

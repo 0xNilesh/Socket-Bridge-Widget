@@ -1,3 +1,4 @@
+export { default as getFromTokenList } from "./fetchFromTokenList";
 export { default as getGasPriceByChainId } from "./fetchGasPriceByChainId";
 export { default as getIfTokenSupported } from "./fetchIfTokenSupported";
 export { default as getSupportedBridges } from "./fetchSupportedBridges";
