@@ -7,6 +7,7 @@ import { getTokenBalanceByTokenAddress } from "../../services";
 import { getTokenPriceByTokenAddress } from "../../services";
 import { getGasPriceByChainId } from "../../services";
 import { getIfTokenSupported } from "../../services";
+import { getToTokenList } from "../../services";
 
 const Wid = () => {
   const chainsResponse = useQuery(["chains"], () => getSupportedChains);
@@ -62,6 +63,17 @@ const Wid = () => {
 
   const bridgesResponse = useQuery(["bridges"], () => getSupportedBridges);
 
+  const toTokenList = useQuery(
+    ["toTokenList"],
+    () => getToTokenList(
+      {
+        fromChainId: '10',
+        toChainId: '100',
+        isShortList: true
+      }
+    )
+  )
+
   if (chainsResponse.isLoading) console.log("Loading...chains");
   else console.log('chain', chainsResponse.data);
 
@@ -82,6 +94,9 @@ const Wid = () => {
 
   if (tokenSupport.isLoading) console.log("Loading...tokenSupport");
   else console.log('tokenSupport', tokenSupport.data);
+
+  if (toTokenList.isLoading) console.log("Loading...toTokenList");
+  else console.log('toTokenList', toTokenList.data);
 
   return <div>Hello</div>;
 }
