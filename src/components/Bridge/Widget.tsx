@@ -1,14 +1,33 @@
 import React from "react";
 import Wid from "./wid";
-import { QueryClient, QueryClientProvider } from "react-query"
+import { QueryClient, QueryClientProvider } from "react-query";
+import { Theme } from "../../config";
 
 const queryClient = new QueryClient();
 
-type Props = {
+export interface WidgetProps {
   apiKey: string;
+  theme: Theme;
+  width: number;
+  defaultInputChainId: number;
+  defaultOutputChainId: number;
 }
 
-const Widget = ({ apiKey }: Props) => {
+const Widget = ({
+  apiKey,
+  theme,
+  width,
+  defaultInputChainId,
+  defaultOutputChainId
+}: WidgetProps) => {
+  console.log({
+    apiKey,
+    theme,
+    width,
+    defaultInputChainId,
+    defaultOutputChainId
+  });
+
   sessionStorage.setItem('apiKey', apiKey);
 
   return (

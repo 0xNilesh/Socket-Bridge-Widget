@@ -1,2 +1,3 @@
 export { default as Button } from "./Button";
-export { default as Widget } from "./Widget";
+
+export { default as BridgeWidget } from "./bridgeWidget";
