@@ -4,7 +4,7 @@ import { darkTheme, Theme } from "../config";
 
 export type BridgeWidgetProps = {
   apiKey: string;
-  theme?: Theme;
+  theme?: Partial<Theme>;
   width?: number;
   defaultInputChainId?: number;
   defaultOutputChainId?: number;
@@ -17,6 +17,7 @@ const BridgeWidget = ({
   defaultInputChainId,
   defaultOutputChainId
 }: BridgeWidgetProps) => {
+  console.log("vhgh", theme);
 
   const themeObj: Theme = { ...darkTheme, ...theme };
 

@@ -13,6 +13,12 @@ export interface WidgetProps {
   defaultOutputChainId: number;
 }
 
+const updateCSS = (themeObj: Theme) => {
+  if(themeObj.bg)
+  document.documentElement.style
+    .setProperty('--bg1', themeObj.bg);
+}
+
 const Widget = ({
   apiKey,
   theme,
@@ -29,10 +35,11 @@ const Widget = ({
   });
 
   sessionStorage.setItem('apiKey', apiKey);
+  updateCSS(theme);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div style={{margin:'25px'}}>
+      <div style={{margin:'25px'}} className="bg-pr">
         <Wid />
       </div>
     </QueryClientProvider>
