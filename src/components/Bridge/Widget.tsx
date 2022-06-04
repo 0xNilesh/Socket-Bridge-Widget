@@ -1,5 +1,5 @@
 import React from "react";
-import Wid from "./wid";
+import WidgetWrapper from "./WidgetWrapper";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Theme } from "../../config";
 
@@ -39,9 +39,7 @@ const Widget = ({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div style={{margin:'25px'}} className="bg-pr">
-        <Wid />
-      </div>
+        <WidgetWrapper />
     </QueryClientProvider>
   );
 }
