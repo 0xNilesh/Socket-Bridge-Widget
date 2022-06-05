@@ -17,7 +17,6 @@ const BridgeWidget = ({
   defaultInputChainId,
   defaultOutputChainId
 }: BridgeWidgetProps) => {
-  console.log("vhgh", theme);
 
   const themeObj: Theme = { ...darkTheme, ...theme };
 

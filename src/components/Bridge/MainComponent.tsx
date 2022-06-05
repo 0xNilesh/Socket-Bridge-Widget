@@ -2,10 +2,12 @@ import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { getSupportedChains } from "../../services";
 import { ChainSelectDropdown } from "../Dropdown";
+import DownArrowSvg from "../../assets/down-arrow.svg";
+import RightArrowSvg from "../../assets/right-arrow.svg";
 
 import { ChainIdContext } from "./WidgetWrapper";
 
-interface obj {
+interface Obj {
   [key: number | string]: Object;
 }
 
@@ -13,9 +15,9 @@ const getChainDataByChainId = (chains: any) => {
   if (chains.isLoading) return [];
 
   const data = chains.data?.data?.result;
-  const chainsByChainId: obj = {};
-  const fromChainsList: Array<obj> = [];
-  const toChainsList: Array<obj> = [];
+  const chainsByChainId: Obj = {};
+  const fromChainsList: Array<Obj> = [];
+  const toChainsList: Array<Obj> = [];
 
 	data.forEach((chain:any) => {
 		chainsByChainId[chain.chainId] = chain;
@@ -46,10 +48,21 @@ const MainComponent = () => {
   const [hideOutputChainDropdown, setHideOutputChainDropdown] = useState(true);
   // console.log(inputChainId, outputChainId);
 
+  const swap = () => {
+    if (
+			chainsByChainId[inputChainId].receivingEnabled === true &&
+			chainsByChainId[outputChainId].sendingEnabled === true
+		) {
+			const fromChain = inputChainId, toChain = outputChainId;
+			setInputChainId(toChain);
+			setOutputChainId(fromChain);
+		}
+	};
+
   return (
     <>
       <div className="grid grid-cols-11 gap-4 rounded-xl">
-        <div className="hover:bg-pr col-start-1 col-span-5 bg-pr text-fc bg-bgLight px-3 py-2 relative rounded-lg border-2 border-bgLight">
+        <div className="hover:bg-pr col-start-1 col-span-5 text-fc bg-bgLight px-3 py-2 relative rounded-lg border-2 border-bgLight">
           <div className="flex flex-col">
             <div className="text-xs">From Network</div>
             <div
@@ -64,19 +77,31 @@ const MainComponent = () => {
                   </div>
                 }
               </div>
-              <div>DA</div>
+              <div className="self-center">
+                <DownArrowSvg className="rotate-90" />
+              </div>
               {!hideInputChainDropdown && fromChainsList &&
                 <ChainSelectDropdown
                   options={fromChainsList}
-                  setChain={(id) => setInputChainId(id)}
+                  setChain={(chainId) => {
+                    if (chainId == outputChainId) swap();
+                    else setInputChainId(chainId)
+                  }}
                   onHide={(val) => setHideInputChainDropdown(val)}
                 />
               }
             </div>
           </div>
         </div>
-        <div className="bg-bgLight text-fc rounded-lg">02</div>
-        <div className="hover:bg-pr col-start-7 col-span-5 bg-pr text-fc bg-bgLight px-3 py-2 relative rounded-lg border-2 border-bgLight">
+        <div className="self-center text-fc">
+          <div
+            className="flex justify-center items-center rounded-lg border-2 border-bgLight bg-pr h-7 hover:cursor-pointer hover:bg-bgLight"
+            onClick={swap}
+          >
+            <RightArrowSvg className="h-3 w-3" />
+          </div>
+        </div>
+        <div className="hover:bg-pr col-start-7 col-span-5 text-fc bg-bgLight px-3 py-2 relative rounded-lg border-2 border-bgLight">
           <div className="flex flex-col">
             <div className="text-xs">To Network</div>
             <div
@@ -91,11 +116,16 @@ const MainComponent = () => {
                   </div>
                 }
               </div>
-              <div>DA</div>
+              <div className="self-center">
+                <DownArrowSvg className="rotate-90" />
+              </div>
               {!hideOutputChainDropdown && toChainsList &&
                 <ChainSelectDropdown
                   options={toChainsList}
-                  setChain={(id) => setOutputChainId(id)}
+                  setChain={(chainId) => {
+                    if (chainId == inputChainId) swap();
+                    else setOutputChainId(chainId)
+                  }}
                   onHide={(val) => setHideOutputChainDropdown(val)}
                 />
               }
