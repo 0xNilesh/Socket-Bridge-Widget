@@ -5,11 +5,11 @@ type Props = {
   chainId: string;
 }
 
-const getTokenPriceByTokenAddress = async({tokenAddress, chainId}: Props) => {
+const getTokenPriceByTokenAddress = ({ tokenAddress, chainId }: Props) => {
   const obj: RequestProps = {
     path: `/token-price?tokenAddress=${tokenAddress}&chainId=${chainId}`
   }
-  const response = await getReq(obj);
+  const response = getReq(obj);
   
   if (!response) {
     throw new Error("Problem fetching token price");

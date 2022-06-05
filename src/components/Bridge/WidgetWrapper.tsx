@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { getSupportedChains } from "../../services";
 import { getSupportedBridges } from "../../services";
@@ -13,10 +13,36 @@ import GasSelector from "./GasSelector";
 import MainComponent from "./MainComponent";
 import RouteSelector from "./RouteSelector";
 
-export const TabIndexContext = createContext({});
+import { PropsContext } from "./Widget";
+
+export type ChainIdContent = {
+  inputChainId: number;
+  outputChainId: number;
+  setInputChainId: (chainId: number) => void;
+  setOutputChainId: (chainId: number) => void;
+}
+
+export type TabIndexContent = {
+  tabIndex: number;
+  setTabIndex: (index: number) => void;
+}
+
+export const TabIndexContext = createContext<TabIndexContent>({
+  tabIndex: 0,
+  setTabIndex: () => {}
+});
+
+export const ChainIdContext = createContext<ChainIdContent>({
+  inputChainId: 1,
+  outputChainId: 137,
+  setInputChainId: () => {},
+  setOutputChainId: () => {}
+});
 
 const WidgetWrapper = () => {
-  // const chainsResponse = useQuery(["chains"], () => getSupportedChains);
+  const widgetProps = useContext(PropsContext);
+  // const chainsResponse = useQuery(["chains"], getSupportedChains);
+  // const bridgesResponse = useQuery(["bridges"], getSupportedBridges);
 
   // const balanceResponse = useQuery(
   //   ["userTokenBalances"],
@@ -26,6 +52,7 @@ const WidgetWrapper = () => {
   //     }
   //   )
   // );
+  // console.log(balanceResponse, chainsResponse, bridgesResponse);
   
   // const tokenBalance = useQuery(
   //   ["tokenBalance"],
@@ -119,16 +146,19 @@ const WidgetWrapper = () => {
   // else console.log('fromTokenList', fromTokenList.data);
 
   const [tabIndex, setTabIndex] = useState(0);
+  const [inputChainId, setInputChainId] = useState((widgetProps as any).defaultInputChainId);
+  const [outputChainId, setOutputChainId] = useState((widgetProps as any).defaultOutputChainId);
 
   return (
     <>
-      <TabIndexContext.Provider value={{setTabIndex}}>
-        <div style={{width: '400px', height: '400px'}} className="rounded-xl bg-pr ml-32">
-          hello
-          {tabIndex === 0 && <MainComponent />}
-          {tabIndex === 1 && <RouteSelector />}
-          {tabIndex === 2 && <GasSelector />}
-        </div>
+      <TabIndexContext.Provider value={{ tabIndex, setTabIndex }}>
+        <ChainIdContext.Provider value={{ inputChainId, setInputChainId, outputChainId, setOutputChainId }}>
+          <div style={{width: '528px', height: '538px'}} className="rounded-xl bg-pr ml-32 p-6">
+            {tabIndex === 0 && <MainComponent />}
+            {tabIndex === 1 && <RouteSelector />}
+            {tabIndex === 2 && <GasSelector />}
+          </div>
+        </ChainIdContext.Provider>
       </TabIndexContext.Provider>
     </>
   );

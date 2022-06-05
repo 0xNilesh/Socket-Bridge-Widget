@@ -6,11 +6,11 @@ type Props = {
   userAddress: string;
 }
 
-const getTokenBalanceByTokenAddress = async({tokenAddress, chainId, userAddress}: Props) => {
+const getTokenBalanceByTokenAddress = ({ tokenAddress, chainId, userAddress }: Props) => {
   const obj: RequestProps = {
     path: `balances/token-balance?tokenAddress=${tokenAddress}&chainId=${chainId}&userAddress=${userAddress}`
   }
-  const response = await getReq(obj);
+  const response = getReq(obj);
   
   if (!response) {
     throw new Error("Problem fetching token balance");

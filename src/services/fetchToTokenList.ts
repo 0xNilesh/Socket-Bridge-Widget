@@ -6,11 +6,11 @@ type Props = {
   isShortList: boolean;
 }
 
-const getToTokenList = async({fromChainId, toChainId, isShortList}: Props) => {
+const getToTokenList = ({ fromChainId, toChainId, isShortList }: Props) => {
   const obj: RequestProps = {
     path: `/token-lists/to-token-list?fromChainId=${fromChainId}&toChainId=${toChainId}&isShortList=${isShortList}`
   }
-  const response = await getReq(obj);
+  const response = getReq(obj);
   
   if (!response) {
     throw new Error("Problem fetching to token list");

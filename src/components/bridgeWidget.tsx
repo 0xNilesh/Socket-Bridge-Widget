@@ -4,7 +4,7 @@ import { darkTheme, Theme } from "../config";
 
 export type BridgeWidgetProps = {
   apiKey: string;
-  theme?: Partial<Theme>;
+  theme?: Theme;
   width?: number;
   defaultInputChainId?: number;
   defaultOutputChainId?: number;
