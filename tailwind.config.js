@@ -7,6 +7,7 @@ module.exports = {
 				bgLight: "var(--bgl)",
 				fc: "var(--fc)",
 				bg2: "#1C1D20",
+				bg3: "#9da0a6",
 			},
 		},
 	},
