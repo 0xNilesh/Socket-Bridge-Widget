@@ -1,10 +1,9 @@
 import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
-import { getSupportedChains, getTokenPriceByTokenAddress } from "../../services";
+import { getSupportedChains, getTokenBalanceByTokenAddress, getTokenPriceByTokenAddress } from "../../services";
 import { ChainSelectDropdown } from "../Dropdown";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 import RightArrowSvg from "../../assets/right-arrow.svg";
-import { QueryClient } from "react-query";
 
 import { ChainIdContext } from "./WidgetWrapper";
 
@@ -12,7 +11,7 @@ interface Obj {
   [key: number | string]: Object;
 }
 
-interface responseObj {
+interface queryResponseObj {
   isLoading: boolean,
   isError: boolean,
   error: Object | null,
@@ -20,8 +19,7 @@ interface responseObj {
     data: {
       success: boolean,
       result: {
-        chainId: number,
-        tokenPrice: number
+        [key: number | string]: any;
       }
     } | undefined
   } | undefined
@@ -63,21 +61,45 @@ const MainComponent = () => {
   const [hideInputChainDropdown, setHideInputChainDropdown] = useState(true);
   const [hideOutputChainDropdown, setHideOutputChainDropdown] = useState(true);
   const [inputTokenAmount, setInputTokenAmount] = useState("");
+  // const [inputTokenBalance, setInputTokenBalance] = useState("0");
   
-  console.log(inputChainId, inputTokenAmount);
+  // console.log(inputChainId, inputTokenAmount);
   let price;
-    const tokenPrice: responseObj = useQuery(
-      ["tokenPrice", inputChainId],
-      () => getTokenPriceByTokenAddress(
-        {
-          tokenAddress: chainsByChainId[inputChainId].currency.address,
-          chainId: inputChainId.toString()
-        }
-      ),{enabled: !!chainsByChainId}
+  const tokenPrice: queryResponseObj = useQuery(
+    ["tokenPrice", inputChainId],
+    () => getTokenPriceByTokenAddress(
+      {
+        tokenAddress: chainsByChainId[inputChainId].currency.address,
+        chainId: inputChainId.toString()
+      }
+    ), {
+      enabled: !!chainsByChainId
+    }
   );
 
   if (!tokenPrice.isLoading) {
     price = tokenPrice.data?.data?.result.tokenPrice;
+  }
+
+  // console.log(inputChainId);
+  let inputTokenBalance = "0"
+  const tokenBalance: queryResponseObj = useQuery(
+    ["tokenBalance", inputChainId],
+    () => getTokenBalanceByTokenAddress(
+      {
+        tokenAddress: chainsByChainId[inputChainId].currency.address,
+        chainId: inputChainId.toString(),
+        userAddress: '0x087f5052fbcd7c02dd45fb9907c57f1eccc2be25'
+      }
+    ), {
+      enabled: !!chainsByChainId
+    }
+  );
+
+  if (!tokenBalance.isLoading) {
+    let balance = tokenBalance.data?.data?.result.balance;
+    let decimals = tokenBalance.data?.data?.result.decimals;
+    inputTokenBalance = (balance / (10 ** decimals)).toPrecision(3).toString();
   }
 
   // to check if inputTokenAmount is a valid amount
@@ -97,8 +119,8 @@ const MainComponent = () => {
   return (
     <>
       <div className="flex flex-col">
-        <div className="grid grid-cols-11 gap-4 rounded-xl" id="chain-select">
-          <div className="hover:bg-pr col-start-1 col-span-5 text-fc bg-bgLight px-3 py-2 relative rounded-lg border-2 border-bgLight">
+        <div id="chain-select" className="grid grid-cols-11 gap-4 rounded-xl">
+          <div id="input-chain-select" className="hover:bg-pr col-start-1 col-span-5 text-fc bg-bgLight px-3 py-2 relative rounded-lg border-2 border-bgLight">
             <div className="flex flex-col">
               <div className="text-xs">From Network</div>
               <div
@@ -137,7 +159,7 @@ const MainComponent = () => {
               <RightArrowSvg className="h-3 w-3" />
             </div>
           </div>
-          <div className="hover:bg-pr col-start-7 col-span-5 text-fc bg-bgLight px-3 py-2 relative rounded-lg border-2 border-bgLight">
+          <div id="output-chain-select" className="hover:bg-pr col-start-7 col-span-5 text-fc bg-bgLight px-3 py-2 relative rounded-lg border-2 border-bgLight">
             <div className="flex flex-col">
               <div className="text-xs">To Network</div>
               <div
@@ -170,7 +192,7 @@ const MainComponent = () => {
           </div>
         </div>
         <div className="h-3"></div>
-        <div className="flex flex-col bg-bgLight rounded-lg px-3 py-2 border-2 border-bgLight hover:bg-pr focus-within:border-blue-500 focus-within:bg-pr">
+        <div id="input-token-select" className="flex flex-col bg-bgLight rounded-lg px-3 py-2 border-2 border-bgLight hover:bg-pr focus-within:border-blue-500 focus-within:bg-pr">
           <div className="flex flex-row">
             <div className="text-bg3 text-xs mr-2">Send</div>
             <div className="grow text-bg3 text-xs text-right font-medium">
@@ -202,6 +224,48 @@ const MainComponent = () => {
                 placeholder="0"
                 className="text-base font-medium bg-transparent w-full text-right border-none outline-none"
                 onChange={(e) => setInputTokenAmount(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="mt-1">
+          <div className="text-bg3 text-sm">
+            {chainsByChainId && <>{inputTokenBalance} {chainsByChainId[inputChainId].currency.symbol}</>}
+          </div>
+        </div>
+        <div className="h-3"></div>
+        <div id="output-token-select" className="flex flex-col bg-bgLight rounded-lg px-3 py-2 border-2 border-bgLight">
+          <div className="flex flex-row">
+            <div className="text-bg3 text-xs mr-2">Receive</div>
+            <div className="grow text-bg3 text-xs text-right font-medium">
+              {price && inputTokenAmount != "" && regexp.test(inputTokenAmount) &&
+                <>
+                  <input
+                    disabled
+                    className="text-xs font-medium bg-transparent w-full text-right border-none outline-none"
+                    value={`$ ${(price * parseFloat(inputTokenAmount)).toLocaleString()}`}
+                  />
+                </>
+              }
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className="flex flex-row text-fc text-lg font-medium hover:cursor-pointer hover:text-blue-500">
+              {chainsByChainId &&
+                <>
+                  <img src={chainsByChainId[outputChainId].currency.icon} className="w-4 h-4 rounded-full mr-1 self-center" />
+                  <div className="mr-2">{chainsByChainId[outputChainId].currency.symbol}</div>
+                  <div className="self-center">
+                    <DownArrowSvg className="rotate-90 mr-1" />
+                  </div>
+                </>
+              }
+            </div>
+            <div className="grow text-fc">
+              <input
+                placeholder="0"
+                disabled
+                className="text-base font-medium bg-transparent w-full text-right border-none outline-none"
               />
             </div>
           </div>
