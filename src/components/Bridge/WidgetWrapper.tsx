@@ -27,6 +27,19 @@ export type TabIndexContent = {
   setTabIndex: (index: number) => void;
 }
 
+interface TokenDetail {
+  address: string,
+  symbol: string,
+  icon: string
+}
+
+export type TokenDetailsContent = {
+  inputTokenDetails: TokenDetail;
+  outputTokenDetails: TokenDetail;
+  setInputTokenDetails: (Obj: TokenDetail) => void;
+  setOutputTokenDetails: (Obj: TokenDetail) => void;
+}
+
 export const TabIndexContext = createContext<TabIndexContent>({
   tabIndex: 0,
   setTabIndex: () => {}
@@ -37,6 +50,13 @@ export const ChainIdContext = createContext<ChainIdContent>({
   outputChainId: 137,
   setInputChainId: () => {},
   setOutputChainId: () => {}
+});
+
+export const TokenDetailsContext = createContext<TokenDetailsContent>({
+  inputTokenDetails: { address: "", symbol: "", icon: "" },
+  outputTokenDetails: { address: "", symbol: "", icon: "" },
+  setInputTokenDetails: () => {},
+  setOutputTokenDetails: () => {}
 });
 
 const WidgetWrapper = () => {
@@ -148,16 +168,20 @@ const WidgetWrapper = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [inputChainId, setInputChainId] = useState((widgetProps as any).defaultInputChainId);
   const [outputChainId, setOutputChainId] = useState((widgetProps as any).defaultOutputChainId);
+  const [inputTokenDetails, setInputTokenDetails] = useState({ address: "", symbol: "", icon: "" });
+  const [outputTokenDetails, setOutputTokenDetails] = useState({ address: "", symbol: "", icon: "" });
 
   return (
     <>
       <TabIndexContext.Provider value={{ tabIndex, setTabIndex }}>
         <ChainIdContext.Provider value={{ inputChainId, setInputChainId, outputChainId, setOutputChainId }}>
-          <div style={{width: '528px', height: '538px'}} className="rounded-xl bg-pr ml-32 p-6">
-            {tabIndex === 0 && <MainComponent />}
-            {tabIndex === 1 && <RouteSelector />}
-            {tabIndex === 2 && <GasSelector />}
-          </div>
+          <TokenDetailsContext.Provider value={{ inputTokenDetails, setInputTokenDetails, outputTokenDetails, setOutputTokenDetails }}>
+            <div style={{width: '528px', height: '538px'}} className="rounded-xl bg-pr ml-32 p-6">
+              {tabIndex === 0 && <MainComponent />}
+              {tabIndex === 1 && <RouteSelector />}
+              {tabIndex === 2 && <GasSelector />}
+            </div>
+          </TokenDetailsContext.Provider>
         </ChainIdContext.Provider>
       </TabIndexContext.Provider>
     </>

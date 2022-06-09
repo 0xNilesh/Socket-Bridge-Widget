@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL: string = "https://backend.movr.network/v2";
+const BASE_URL: string = "https://api.socket.tech/v2";
 
 const ApiClient = () => {
   const apiKey = sessionStorage.getItem('apiKey');
