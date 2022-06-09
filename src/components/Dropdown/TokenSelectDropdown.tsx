@@ -167,7 +167,7 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
               </div>
             );
           })}
-          {(filteredResults.length === 0 && newToken.address) ? 
+          {(filteredResults.length === 0 && newToken.address) &&
             <div
                 className="flex mx-2 my-3 p-1 rounded-lg h-10 items-center text-sm font-medium"
                 key={newToken.address}
@@ -188,7 +188,8 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
                   Import Token
                 </button>
             </div>
-            :
+          }
+          {(filteredResults.length === 0 && !newToken.address) &&
             <div className="text-bg3 font-medium text-base mt-2 ml-3">No Tokens Found</div>
           }
         </div>
