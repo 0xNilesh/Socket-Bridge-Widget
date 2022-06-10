@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { getFromTokenList, getSupportedChains, getTokenBalanceByTokenAddress, getTokenPriceByTokenAddress, getToTokenList } from "../../services";
 import { ChainSelectDropdown, TokenSelectDropdown } from "../Dropdown";
@@ -11,6 +11,14 @@ import { TokenDetailsContext } from "./WidgetWrapper";
 interface Obj {
   [key: number | string]: Object;
 }
+
+let price: any;
+let inputTokenList: any;
+let inputTokenBalance = "0";
+let outputTokenList: any;
+
+// to check if inputTokenAmount is a valid amount
+let regexp = new RegExp(/^(\d*)?(\.)?\d*$/);
 
 export interface queryResponseObj {
   isLoading: boolean,
@@ -69,7 +77,6 @@ const MainComponent = () => {
   // const [inputTokenBalance, setInputTokenBalance] = useState("0");
   
   // console.log(inputChainId, inputTokenAmount);
-  let price;
   const tokenPrice: queryResponseObj = useQuery(
     ["tokenPrice", inputChainId, inputTokenDetails],
     () => getTokenPriceByTokenAddress(
@@ -78,16 +85,11 @@ const MainComponent = () => {
         chainId: inputChainId.toString()
       }
     ), {
-      enabled: !!chainsByChainId
+      enabled: !!(chainsByChainId && inputTokenDetails.address)
     }
   );
 
-  if (tokenPrice.isSuccess) {
-    price = tokenPrice.data?.data?.result.tokenPrice;
-  }
-
   // console.log(inputChainId);
-  let inputTokenBalance = "0";
   const tokenBalance: queryResponseObj = useQuery(
     ["tokenBalance", inputChainId, inputTokenDetails],
     () => getTokenBalanceByTokenAddress(
@@ -97,33 +99,25 @@ const MainComponent = () => {
         userAddress: '0x087f5052fbcd7c02dd45fb9907c57f1eccc2be25'
       }
     ), {
-      enabled: !!chainsByChainId
+      enabled: !!(chainsByChainId && inputTokenDetails.address)
     }
   );
 
-  if (tokenBalance.isSuccess) {
-    let balance = tokenBalance.data?.data?.result.balance;
-    let decimals = tokenBalance.data?.data?.result.decimals;
-    inputTokenBalance = (balance / (10 ** decimals)).toPrecision(3).toString();
-  }
-
-  let inputTokenList: any;
   const fromTokenList: queryResponseObj = useQuery(
     ["fromTokenList", inputChainId],
     () => getFromTokenList(
-      {
-        fromChainId: inputChainId.toString(),
-        toChainId: outputChainId.toString(),
-        isShortList: true
-      }
-    ), {
-      enabled: !!(chainsByChainId != undefined && inputChainId)
+        {
+          fromChainId: inputChainId.toString(),
+          toChainId: outputChainId.toString(),
+          isShortList: true
+        }
+      ), {
+      enabled: !!(chainsByChainId && inputChainId)
     }
   );
 
-  let outputTokenList: any;
   const toTokenList: queryResponseObj = useQuery(
-    ["toTokenList", inputChainId],
+    ["toTokenList", outputChainId],
     () => getToTokenList(
       {
         fromChainId: inputChainId.toString(),
@@ -147,18 +141,38 @@ const MainComponent = () => {
     return tokenList;
   }
 
-  if (fromTokenList.isSuccess) {
-    inputTokenList = fromTokenList.data?.data?.result;
-    inputTokenList = updateTokenList(inputChainId, inputTokenList);
-  }
+  useEffect(() => {
+    if (fromTokenList.isSuccess) {
+      inputTokenList = fromTokenList.data?.data?.result;
+      const { address, icon, symbol } = inputTokenList.filter((token: any) => (token.symbol === 'USDC'))[0];
+      console.log(address, icon, symbol);
+      setInputTokenDetails({ address, icon, symbol });
+      inputTokenList = updateTokenList(inputChainId, inputTokenList);
+    }
+  }, [fromTokenList.isSuccess, inputChainId])
 
-  if (toTokenList.isSuccess) {
-    outputTokenList = toTokenList.data?.data?.result;
-    outputTokenList = updateTokenList(outputChainId, outputTokenList);
-  }
+  useEffect(() => {
+    if (tokenPrice.isSuccess) {
+      price = tokenPrice.data?.data?.result.tokenPrice;
+    }
+  }, [tokenPrice.isSuccess])
 
-  // to check if inputTokenAmount is a valid amount
-  let regexp = new RegExp(/^(\d*)?(\.)?\d*$/);
+  useEffect(() => {
+    if (tokenBalance.isSuccess) {
+      let balance = tokenBalance.data?.data?.result.balance;
+      let decimals = tokenBalance.data?.data?.result.decimals;
+      inputTokenBalance = (balance / (10 ** decimals)).toPrecision(3).toString();
+    }
+  }, [tokenBalance.isSuccess])
+
+  useEffect(() => {
+    if (toTokenList.isSuccess) {
+      outputTokenList = toTokenList.data?.data?.result;
+      const { address, icon, symbol } = outputTokenList.filter((token: any) => (token.symbol === 'USDC'))[0];
+      setOutputTokenDetails({ address, icon, symbol });
+      outputTokenList = updateTokenList(outputChainId, outputTokenList);
+    }
+  }, [toTokenList.isSuccess, outputChainId]);
 
   const swap = () => {
     if (
@@ -197,11 +211,7 @@ const MainComponent = () => {
                   <ChainSelectDropdown
                     options={fromChainsList}
                     setChain={(chainId) => {
-                      setInputTokenDetails({
-                        address: chainsByChainId[chainId].currency.address,
-                        symbol: chainsByChainId[chainId].currency.symbol,
-                        icon: chainsByChainId[chainId].currency.icon
-                      })
+                      setInputTokenDetails({ address: "", icon: "", symbol: "" })
                       if (chainId == outputChainId) swap();
                       else setInputChainId(chainId)
                     }}
@@ -215,16 +225,8 @@ const MainComponent = () => {
             <div
               className="flex justify-center items-center rounded-lg border-2 border-bgLight bg-pr h-7 hover:cursor-pointer hover:bg-bgLight"
               onClick={() => {
-                setInputTokenDetails({
-                  address: chainsByChainId[outputChainId].currency.address,
-                  symbol: chainsByChainId[outputChainId].currency.symbol,
-                  icon: chainsByChainId[outputChainId].currency.icon
-                })
-                setOutputTokenDetails({
-                  address: chainsByChainId[inputChainId].currency.address,
-                  symbol: chainsByChainId[inputChainId].currency.symbol,
-                  icon: chainsByChainId[inputChainId].currency.icon
-                })
+                setInputTokenDetails({ address: "", icon: "", symbol: "" })
+                setOutputTokenDetails({ address: "", icon: "", symbol: "" })
                 swap();
               }}
             >
@@ -253,11 +255,7 @@ const MainComponent = () => {
                   <ChainSelectDropdown
                     options={toChainsList}
                     setChain={(chainId) => {
-                      setOutputTokenDetails({
-                        address: chainsByChainId[chainId].currency.address,
-                        symbol: chainsByChainId[chainId].currency.symbol,
-                        icon: chainsByChainId[chainId].currency.icon
-                      })
+                      setOutputTokenDetails({ address: "", icon: "", symbol: "" })
                       if (chainId == inputChainId) swap();
                       else setOutputChainId(chainId)
                     }}
@@ -287,12 +285,13 @@ const MainComponent = () => {
           <div className="flex flex-row">
             <div
               className="flex flex-row text-fc text-lg font-medium hover:cursor-pointer hover:text-blue-500"
-              onClick={() => setHideInputTokenDropdown(!hideInputTokenDropdown)}
+                onClick={() => setHideInputTokenDropdown(!hideInputTokenDropdown)
+              }
             >
               {chainsByChainId && (inputTokenDetails.address === "") &&
                 <>
-                  <img src={chainsByChainId[inputChainId].currency.icon} className="w-4 h-4 rounded-full mr-1 self-center" />
-                  <div className="mr-2">{chainsByChainId[inputChainId].currency.symbol}</div>
+                  {/* <img src={chainsByChainId[inputChainId].currency.icon} className="w-4 h-4 rounded-full mr-1 self-center" /> */}
+                  <div className="mr-2">Loading...</div>
                   <div className="self-center">
                     <DownArrowSvg className="rotate-90 mr-1" />
                   </div>
@@ -327,7 +326,7 @@ const MainComponent = () => {
         </div>
         <div className="mt-1">
           <div className="text-bg3 text-sm">
-            {chainsByChainId && <>{inputTokenBalance} {inputTokenDetails.symbol !== "" ? inputTokenDetails.symbol : chainsByChainId[inputChainId].currency.symbol}</>}
+            {chainsByChainId && <>{inputTokenBalance} {inputTokenDetails.symbol}</>}
           </div>
         </div>
         <div className="h-3"></div>
@@ -353,8 +352,8 @@ const MainComponent = () => {
             >
               {chainsByChainId && (outputTokenDetails.address === "") &&
                 <>
-                  <img src={chainsByChainId[outputChainId].currency.icon} className="w-4 h-4 rounded-full mr-1 self-center" />
-                  <div className="mr-2">{chainsByChainId[outputChainId].currency.symbol}</div>
+                  {/* <img src={chainsByChainId[outputChainId].currency.icon} className="w-4 h-4 rounded-full mr-1 self-center" /> */}
+                  <div className="mr-2">Loading...</div>
                   <div className="self-center">
                     <DownArrowSvg className="rotate-90 mr-1" />
                   </div>

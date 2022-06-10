@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import { useQuery } from "react-query";
-import { getSupportedChains } from "../../services";
+import { getQuote, getSupportedChains } from "../../services";
 import { getSupportedBridges } from "../../services";
 import { getUserTokenBalances } from "../../services";
 import { getTokenBalanceByTokenAddress } from "../../services";
@@ -165,11 +165,36 @@ const WidgetWrapper = () => {
   // if (fromTokenList.isLoading) console.log("Loading...fromTokenList");
   // else console.log('fromTokenList', fromTokenList.data);
 
+  
+  // }
+
   const [tabIndex, setTabIndex] = useState(0);
   const [inputChainId, setInputChainId] = useState((widgetProps as any).defaultInputChainId);
   const [outputChainId, setOutputChainId] = useState((widgetProps as any).defaultOutputChainId);
   const [inputTokenDetails, setInputTokenDetails] = useState({ address: "", symbol: "", icon: "" });
   const [outputTokenDetails, setOutputTokenDetails] = useState({ address: "", symbol: "", icon: "" });
+
+  // const fetchQuotes = () => {
+    const quoteList = useQuery(
+      ["quoteList"],
+      () => getQuote(
+        {
+          fromChainId: inputChainId,
+          fromTokenAddress: inputTokenDetails.address,
+          toChainId: outputChainId,
+          toTokenAddress: outputTokenDetails.address,
+          fromAmount: '1000000000000',
+          userAddress: "0x087f5052fbcd7c02dd45fb9907c57f1eccc2be25",
+          uniqueRoutesPerBridge: true,
+          sort: "output",
+          singleTxOnly: true
+        }
+      ), {
+      enabled: !!(inputTokenDetails.address && outputTokenDetails.address)
+    }
+    )
+  console.log(quoteList);
+  // }
 
   return (
     <>
