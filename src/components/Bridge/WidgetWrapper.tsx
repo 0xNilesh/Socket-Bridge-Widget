@@ -30,7 +30,8 @@ export type TabIndexContent = {
 interface TokenDetail {
   address: string,
   symbol: string,
-  icon: string
+  icon: string,
+  decimals: number
 }
 
 export type TokenDetailsContent = {
@@ -53,11 +54,19 @@ export const ChainIdContext = createContext<ChainIdContent>({
 });
 
 export const TokenDetailsContext = createContext<TokenDetailsContent>({
-  inputTokenDetails: { address: "", symbol: "", icon: "" },
-  outputTokenDetails: { address: "", symbol: "", icon: "" },
-  setInputTokenDetails: () => {},
-  setOutputTokenDetails: () => {}
+  inputTokenDetails: { address: "", symbol: "", icon: "", decimals: 0 },
+  outputTokenDetails: { address: "", symbol: "", icon: "", decimals: 0 },
+  setInputTokenDetails: () => { },
+  setOutputTokenDetails: () => { }
 });
+
+export const RoutesContext = createContext({
+  selectedRoute: {} as any,
+  routes: [],
+  fetchQuotes: (amount: string) => { },
+  setRoutes: (routes: []) => {},
+  setSelectedRoute: (routes: any) => {}
+})
 
 const WidgetWrapper = () => {
   const widgetProps = useContext(PropsContext);
@@ -171,41 +180,26 @@ const WidgetWrapper = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [inputChainId, setInputChainId] = useState((widgetProps as any).defaultInputChainId);
   const [outputChainId, setOutputChainId] = useState((widgetProps as any).defaultOutputChainId);
-  const [inputTokenDetails, setInputTokenDetails] = useState({ address: "", symbol: "", icon: "" });
-  const [outputTokenDetails, setOutputTokenDetails] = useState({ address: "", symbol: "", icon: "" });
+  const [inputTokenDetails, setInputTokenDetails] = useState({ address: "", symbol: "", icon: "", decimals: 0 });
+  const [outputTokenDetails, setOutputTokenDetails] = useState({ address: "", symbol: "", icon: "", decimals: 0 });
+  const [routes, setRoutes] = useState([]);
+  const [selectedRoute, setSelectedRoute] = useState({});
 
-  // const fetchQuotes = () => {
-    const quoteList = useQuery(
-      ["quoteList"],
-      () => getQuote(
-        {
-          fromChainId: inputChainId,
-          fromTokenAddress: inputTokenDetails.address,
-          toChainId: outputChainId,
-          toTokenAddress: outputTokenDetails.address,
-          fromAmount: '1000000000000',
-          userAddress: "0x087f5052fbcd7c02dd45fb9907c57f1eccc2be25",
-          uniqueRoutesPerBridge: true,
-          sort: "output",
-          singleTxOnly: true
-        }
-      ), {
-      enabled: !!(inputTokenDetails.address && outputTokenDetails.address)
-    }
-    )
-  console.log(quoteList);
-  // }
+  const fetchQuotes = (amount: string) => {
+  }
 
   return (
     <>
       <TabIndexContext.Provider value={{ tabIndex, setTabIndex }}>
         <ChainIdContext.Provider value={{ inputChainId, setInputChainId, outputChainId, setOutputChainId }}>
           <TokenDetailsContext.Provider value={{ inputTokenDetails, setInputTokenDetails, outputTokenDetails, setOutputTokenDetails }}>
-            <div style={{width: '528px', height: '538px'}} className="rounded-xl bg-pr ml-32 p-6">
-              {tabIndex === 0 && <MainComponent />}
-              {tabIndex === 1 && <RouteSelector />}
-              {tabIndex === 2 && <GasSelector />}
-            </div>
+            <RoutesContext.Provider value={{ selectedRoute, routes, fetchQuotes, setRoutes, setSelectedRoute }}>
+              <div style={{width: '528px', height: '538px'}} className="rounded-xl bg-pr ml-32 p-6">
+                {tabIndex === 0 && <MainComponent />}
+                {tabIndex === 1 && <RouteSelector />}
+                {tabIndex === 2 && <GasSelector />}
+              </div>
+            </RoutesContext.Provider>
           </TokenDetailsContext.Provider>
         </ChainIdContext.Provider>
       </TabIndexContext.Provider>
@@ -213,4 +207,4 @@ const WidgetWrapper = () => {
   );
 }
 
-export default WidgetWrapper;
+export default React.memo(WidgetWrapper);

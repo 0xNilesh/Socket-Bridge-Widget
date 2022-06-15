@@ -7,7 +7,8 @@ import { ethers } from "ethers";
 interface TokenDetail {
   address: string,
   symbol: string,
-  icon: string
+  icon: string,
+  decimals: number
 }
 
 export interface queryResponseObj {
@@ -153,7 +154,7 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
               <div
                 className="flex mx-2 my-3 p-1 rounded-lg h-10 items-center text-sm font-medium hover:cursor-pointer hover:bg-bgLight"
                 onClick={() => {
-                  setTokenDetail({ address: option.address, symbol: option.symbol, icon: option.icon });
+                  setTokenDetail({ address: option.address, symbol: option.symbol, icon: option.icon, decimals: option.decimals });
                   onHide(true);
                 }}
                 key={option.address}
