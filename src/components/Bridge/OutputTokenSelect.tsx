@@ -1,31 +1,47 @@
-import React, { useContext, useEffect, useState } from "react";
-import { ChainIdContext, TokenDetailsContext } from "./WidgetWrapper";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { ChainIdContext, RoutesContext, TokenDetailsContext } from "./WidgetWrapper";
 import { TokenSelectDropdown } from "../Dropdown";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 import { queryResponseObj } from "../../types";
 import { useQuery } from "react-query";
-import { getTokenPriceByTokenAddress, getToTokenList } from "../../services";
+import { getToTokenList, getQuote, getTokenPriceByTokenAddress } from "../../services";
 import { updateTokenList } from "../../helpers";
+import { InputTokenAmountContext } from "./TokensSelect";
 
+import {  useQueryClient } from 'react-query'
+
+import debounce from "lodash.debounce";
+let DEBOUNCE_TIMEOUT = 1500;
+
+let price: any;
 let outputTokenList: any;
+let quoteList: queryResponseObj;
+
+// to check if inputTokenAmount is a valid amount
+let regexp = new RegExp(/^(\d*)?(\.)?\d*$/);
 
 const OutputTokenSelect: React.FC = () => {
+   // Get QueryClient from the context
+  const queryClient = useQueryClient();
   const { inputChainId, outputChainId } = useContext(ChainIdContext);
-  const { inputTokenDetails, outputTokenDetails, setOutputTokenDetails} = useContext(TokenDetailsContext);
+  const { inputTokenDetails, outputTokenDetails, setOutputTokenDetails } = useContext(TokenDetailsContext);
 
   const [hideOutputTokenDropdown, setHideOutputTokenDropdown] = useState(true);
+  const [fetchRoute, setFetchRoute] = useState(false);
+  const { selectedRoute, setRoutes, setSelectedRoute } = useContext(RoutesContext);
+  const { inputTokenAmount } = useContext(InputTokenAmountContext);
 
-  // const tokenPrice: queryResponseObj = useQuery(
-  //   ["tokenPrice", inputChainId, inputTokenDetails],
-  //     () => getTokenPriceByTokenAddress(
-  //       {
-  //         tokenAddress: inputTokenDetails.address,
-  //         chainId: inputChainId.toString()
-  //       }
-  //     ), {
-  //     enabled: !!(inputTokenDetails.address)
-  //   }
-  // );
+  const tokenPrice: queryResponseObj = useQuery(
+    ["tokenPrice", outputTokenDetails],
+      () => getTokenPriceByTokenAddress(
+        {
+          tokenAddress: inputTokenDetails.address,
+          chainId: inputChainId.toString()
+        }
+      ), {
+      enabled: !!(outputTokenDetails.address)
+    }
+  );
 
   const toTokenList: queryResponseObj = useQuery(
     ["toTokenList", outputChainId],
@@ -40,6 +56,57 @@ const OutputTokenSelect: React.FC = () => {
     }
   );
 
+  quoteList = useQuery(
+    ["quoteList", inputTokenDetails.address, outputTokenDetails.address, inputTokenAmount],
+      () => {
+        console.log("calling");
+        setFetchRoute(false);
+        return getQuote(
+          {
+            fromChainId: inputChainId.toString(),
+            fromTokenAddress: inputTokenDetails.address,
+            toChainId: outputChainId.toString(),
+            toTokenAddress: outputTokenDetails.address,
+            fromAmount: (parseFloat(inputTokenAmount) * (10 ** inputTokenDetails.decimals)).toLocaleString().split(',').join(''),
+            userAddress: "0x087f5052fbcd7c02dd45fb9907c57f1eccc2be25",
+            uniqueRoutesPerBridge: true,
+            sort: "output",
+            singleTxOnly: true
+          }
+        )
+      }, {
+      enabled: !!(inputTokenDetails.address && outputTokenDetails.address && regexp.test(inputTokenAmount) && fetchRoute === true && inputTokenAmount != "")
+    }
+  );
+
+  useEffect(() => {
+    if (quoteList.isSuccess) {
+      const response: any = quoteList.data?.data?.result;
+      if (response?.routes.length) {
+        setSelectedRoute(response?.routes[0]);
+        setRoutes(response?.routes);
+      } else {
+        setSelectedRoute({});
+        setRoutes([]);
+      }
+    }
+  }, [quoteList.isSuccess, inputTokenDetails.address, outputTokenDetails.address, inputTokenAmount]);
+
+  const debouncedFetchRouteCall = useCallback(
+    debounce(() => {
+      setFetchRoute(true);
+    }, DEBOUNCE_TIMEOUT),
+    [], // will be created only once initially
+  );
+  
+  // debounce to reduce API calls while typing
+  useEffect(() => {
+    if (!regexp.test(inputTokenAmount) || inputTokenAmount == "") {
+      return;
+    }
+    debouncedFetchRouteCall();
+  }, [inputTokenAmount, inputTokenDetails.address, outputTokenDetails.address]);
+
   useEffect(() => {
     if (toTokenList.isSuccess) {
       outputTokenList = toTokenList.data?.data?.result;
@@ -49,20 +116,26 @@ const OutputTokenSelect: React.FC = () => {
     }
   }, [toTokenList.isSuccess, outputChainId]);
 
+  if (tokenPrice.isSuccess) {
+    price = tokenPrice.data?.data?.result.tokenPrice;
+  } else if (tokenPrice.isError) {
+    price = 0;
+  }
+
   return (
     <div id="output-token-select" className="flex flex-col relative bg-bgLight rounded-lg px-3 py-2 border-2 border-bgLight">
       <div className="flex flex-row">
         <div className="text-bg3 text-xs mr-2">Receive</div>
         <div className="grow text-bg3 text-xs text-right font-medium">
-          {/* {price && inputTokenAmount != "" && regexp.test(inputTokenAmount) &&
+          {price && Object.keys(selectedRoute).length !== 0 && inputTokenAmount != "" &&
             <>
               <input
                 disabled
                 className="text-xs font-medium bg-transparent w-full text-right border-none outline-none"
-                value={`$ ${(price * parseFloat(inputTokenAmount)).toLocaleString()}`}
+                value={`$ ${(price * (parseInt(selectedRoute.toAmount) / (10 ** outputTokenDetails.decimals))).toLocaleString()}`}
               />
             </>
-          } */}
+          }
         </div>
       </div>
       <div className="flex flex-row">
@@ -93,14 +166,15 @@ const OutputTokenSelect: React.FC = () => {
           <input
             placeholder="0"
             disabled
-            // value={
-            //   quoteList.isLoading
-            //     ? "Loading..."
-            //     : (
-            //       Object.keys(selectedRoute).length == 0
-            //       ? "0"
-            //       : (parseInt(selectedRoute.toAmount) / (10 ** outputTokenDetails.decimals)).toString()
-            //       )}
+            value={
+              quoteList.isLoading
+                ? "Loading..."
+                : (
+                    Object.keys(selectedRoute).length === 0 || inputTokenAmount === "" || !regexp.test(inputTokenAmount)
+                    ? "0"
+                    : (parseInt(selectedRoute.toAmount) / (10 ** outputTokenDetails.decimals)).toString()
+                  )
+            }
             className="text-base font-medium bg-transparent w-full text-right border-none outline-none"
           />
         </div>

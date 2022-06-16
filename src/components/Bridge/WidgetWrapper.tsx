@@ -194,7 +194,7 @@ const WidgetWrapper = () => {
         <ChainIdContext.Provider value={{ inputChainId, setInputChainId, outputChainId, setOutputChainId }}>
           <TokenDetailsContext.Provider value={{ inputTokenDetails, setInputTokenDetails, outputTokenDetails, setOutputTokenDetails }}>
             <RoutesContext.Provider value={{ selectedRoute, routes, fetchQuotes, setRoutes, setSelectedRoute }}>
-              <div style={{width: '528px', height: '538px'}} className="rounded-xl bg-pr ml-32 p-6">
+              <div style={{width: '528px', height: '538px', marginTop: "50px"}} className="rounded-xl bg-pr ml-32 p-6">
                 {tabIndex === 0 && <MainComponent />}
                 {tabIndex === 1 && <RouteSelector />}
                 {tabIndex === 2 && <GasSelector />}

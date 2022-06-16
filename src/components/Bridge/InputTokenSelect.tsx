@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ChainIdContext, TokenDetailsContext } from "./WidgetWrapper";
+import { InputTokenAmountContext } from "./TokensSelect";
 import { TokenSelectDropdown } from "../Dropdown";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 import { queryResponseObj } from "../../types";
@@ -15,10 +16,10 @@ let regexp = new RegExp(/^(\d*)?(\.)?\d*$/);
 
 const InputTokenSelect: React.FC = () => {
   const { inputChainId, outputChainId } = useContext(ChainIdContext);
-  const { inputTokenDetails, setInputTokenDetails} = useContext(TokenDetailsContext);
+  const { inputTokenDetails, setInputTokenDetails } = useContext(TokenDetailsContext);
 
   const [hideInputTokenDropdown, setHideInputTokenDropdown] = useState(true);
-  const [inputTokenAmount, setInputTokenAmount] = useState("");
+  const { inputTokenAmount, setInputTokenAmount } = useContext(InputTokenAmountContext);
 
   const tokenPrice: queryResponseObj = useQuery(
     ["tokenPrice", inputChainId, inputTokenDetails],
@@ -57,6 +58,8 @@ const InputTokenSelect: React.FC = () => {
 
   if (tokenPrice.isSuccess) {
     price = tokenPrice.data?.data?.result.tokenPrice;
+  } else if (tokenPrice.isError) {
+    price = 0;
   }
 
   return (
