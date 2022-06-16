@@ -63,7 +63,6 @@ export const TokenDetailsContext = createContext<TokenDetailsContent>({
 export const RoutesContext = createContext({
   selectedRoute: {} as any,
   routes: [],
-  fetchQuotes: (amount: string) => { },
   setRoutes: (routes: []) => {},
   setSelectedRoute: (routes: any) => {}
 })
@@ -185,15 +184,12 @@ const WidgetWrapper = () => {
   const [routes, setRoutes] = useState([]);
   const [selectedRoute, setSelectedRoute] = useState({});
 
-  const fetchQuotes = (amount: string) => {
-  }
-
   return (
     <>
       <TabIndexContext.Provider value={{ tabIndex, setTabIndex }}>
         <ChainIdContext.Provider value={{ inputChainId, setInputChainId, outputChainId, setOutputChainId }}>
           <TokenDetailsContext.Provider value={{ inputTokenDetails, setInputTokenDetails, outputTokenDetails, setOutputTokenDetails }}>
-            <RoutesContext.Provider value={{ selectedRoute, routes, fetchQuotes, setRoutes, setSelectedRoute }}>
+            <RoutesContext.Provider value={{ selectedRoute, routes, setRoutes, setSelectedRoute }}>
               <div style={{width: '528px', height: '538px', marginTop: "50px"}} className="rounded-xl bg-pr ml-32 p-6">
                 {tabIndex === 0 && <MainComponent />}
                 {tabIndex === 1 && <RouteSelector />}

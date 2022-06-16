@@ -22,15 +22,15 @@ const InputTokenSelect: React.FC = () => {
   const { inputTokenAmount, setInputTokenAmount } = useContext(InputTokenAmountContext);
 
   const tokenPrice: queryResponseObj = useQuery(
-    ["tokenPrice", inputChainId, inputTokenDetails],
-      () => getTokenPriceByTokenAddress(
-        {
-          tokenAddress: inputTokenDetails.address,
-          chainId: inputChainId.toString()
-        }
-      ), {
-      enabled: !!(inputTokenDetails.address)
-    }
+    ["tokenPrice1", inputTokenDetails],
+    () => getTokenPriceByTokenAddress(
+      {
+        tokenAddress: inputTokenDetails.address,
+        chainId: inputChainId.toString()
+      }
+    ), {
+    enabled: !!(inputTokenDetails.address != "")
+  }
   );
 
   const fromTokenList: queryResponseObj = useQuery(

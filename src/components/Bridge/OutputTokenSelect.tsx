@@ -8,8 +8,6 @@ import { getToTokenList, getQuote, getTokenPriceByTokenAddress } from "../../ser
 import { updateTokenList } from "../../helpers";
 import { InputTokenAmountContext } from "./TokensSelect";
 
-import {  useQueryClient } from 'react-query'
-
 import debounce from "lodash.debounce";
 let DEBOUNCE_TIMEOUT = 1500;
 
@@ -21,8 +19,6 @@ let quoteList: queryResponseObj;
 let regexp = new RegExp(/^(\d*)?(\.)?\d*$/);
 
 const OutputTokenSelect: React.FC = () => {
-   // Get QueryClient from the context
-  const queryClient = useQueryClient();
   const { inputChainId, outputChainId } = useContext(ChainIdContext);
   const { inputTokenDetails, outputTokenDetails, setOutputTokenDetails } = useContext(TokenDetailsContext);
 
@@ -32,11 +28,11 @@ const OutputTokenSelect: React.FC = () => {
   const { inputTokenAmount } = useContext(InputTokenAmountContext);
 
   const tokenPrice: queryResponseObj = useQuery(
-    ["tokenPrice", outputTokenDetails],
+    ["tokenPrice2", outputTokenDetails],
       () => getTokenPriceByTokenAddress(
         {
-          tokenAddress: inputTokenDetails.address,
-          chainId: inputChainId.toString()
+          tokenAddress: outputTokenDetails.address,
+          chainId: outputChainId.toString()
         }
       ), {
       enabled: !!(outputTokenDetails.address)
@@ -45,13 +41,14 @@ const OutputTokenSelect: React.FC = () => {
 
   const toTokenList: queryResponseObj = useQuery(
     ["toTokenList", outputChainId],
-      () => getToTokenList(
-        {
-          fromChainId: inputChainId.toString(),
-          toChainId: outputChainId.toString(),
-          isShortList: true
-        }
-      ), {
+    () => getToTokenList(
+      {
+        fromChainId: inputChainId.toString(),
+        toChainId: outputChainId.toString(),
+        isShortList: true
+      }
+    ),
+    {
       enabled: !!(outputChainId)
     }
   );
@@ -132,7 +129,7 @@ const OutputTokenSelect: React.FC = () => {
               <input
                 disabled
                 className="text-xs font-medium bg-transparent w-full text-right border-none outline-none"
-                value={`$ ${(price * (parseInt(selectedRoute.toAmount) / (10 ** outputTokenDetails.decimals))).toLocaleString()}`}
+                value={`$ ${((price * parseInt(selectedRoute.toAmount)) / (10 ** outputTokenDetails.decimals)).toLocaleString()}`}
               />
             </>
           }
