@@ -63,8 +63,13 @@ const Widget = ({
 export default Widget;
 
 /*
-Main chains Component - After transfer (two buttons, Approve and Bridge)
-Select Bridge Component
-Select Gas Component
-After Bridge txs Component
+  Select Bridge Component
+  Select Gas Component
+  Get provider from user
+  Select sort method of quote
+  Add themes
+  Make responsible acc to width
+  Complete main component
+  Transfer Button and methods
+  Final Progress Component
 */

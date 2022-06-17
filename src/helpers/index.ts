@@ -9,3 +9,6 @@ export const updateTokenList = (chainId: number, tokenList: any) => {
   }
   return tokenList;
 }
+
+// to check if inputTokenAmount is a valid amount
+export const isValidInput = new RegExp(/^(\d*)?(\.)?\d*$/);

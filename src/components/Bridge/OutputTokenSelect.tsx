@@ -5,18 +5,15 @@ import DownArrowSvg from "../../assets/down-arrow.svg";
 import { queryResponseObj } from "../../types";
 import { useQuery } from "react-query";
 import { getToTokenList, getQuote, getTokenPriceByTokenAddress } from "../../services";
-import { updateTokenList } from "../../helpers";
-import { InputTokenAmountContext } from "./TokensSelect";
+import { isValidInput, updateTokenList } from "../../helpers";
 
 import debounce from "lodash.debounce";
+import { InputTokenAmountContext } from "./MainComponent";
 let DEBOUNCE_TIMEOUT = 1500;
 
 let price: any;
 let outputTokenList: any;
 let quoteList: queryResponseObj;
-
-// to check if inputTokenAmount is a valid amount
-let regexp = new RegExp(/^(\d*)?(\.)?\d*$/);
 
 const OutputTokenSelect: React.FC = () => {
   const { inputChainId, outputChainId } = useContext(ChainIdContext);
@@ -72,7 +69,7 @@ const OutputTokenSelect: React.FC = () => {
           }
         )
       }, {
-      enabled: !!(inputTokenDetails.address && outputTokenDetails.address && regexp.test(inputTokenAmount) && fetchRoute === true && inputTokenAmount != "")
+      enabled: !!(inputTokenDetails.address && outputTokenDetails.address && isValidInput.test(inputTokenAmount) && fetchRoute === true && inputTokenAmount != "")
     }
   );
 
@@ -98,7 +95,7 @@ const OutputTokenSelect: React.FC = () => {
   
   // debounce to reduce API calls while typing
   useEffect(() => {
-    if (!regexp.test(inputTokenAmount) || inputTokenAmount == "") {
+    if (!isValidInput.test(inputTokenAmount) || inputTokenAmount == "") {
       return;
     }
     debouncedFetchRouteCall();
@@ -167,7 +164,7 @@ const OutputTokenSelect: React.FC = () => {
               quoteList.isLoading
                 ? "Loading..."
                 : (
-                    Object.keys(selectedRoute).length === 0 || inputTokenAmount === "" || !regexp.test(inputTokenAmount)
+                    Object.keys(selectedRoute).length === 0 || inputTokenAmount === "" || !isValidInput.test(inputTokenAmount)
                     ? "0"
                     : (parseInt(selectedRoute.toAmount) / (10 ** outputTokenDetails.decimals)).toString()
                   )

@@ -1,18 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ChainIdContext, TokenDetailsContext } from "./WidgetWrapper";
-import { InputTokenAmountContext } from "./TokensSelect";
 import { TokenSelectDropdown } from "../Dropdown";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 import { queryResponseObj } from "../../types";
 import { useQuery } from "react-query";
 import { getFromTokenList, getTokenPriceByTokenAddress } from "../../services";
-import { updateTokenList } from "../../helpers";
+import { isValidInput, updateTokenList } from "../../helpers";
+import { InputTokenAmountContext } from "./MainComponent";
 
 let price: any;
 let inputTokenList: any;
-
-// to check if inputTokenAmount is a valid amount
-let regexp = new RegExp(/^(\d*)?(\.)?\d*$/);
 
 const InputTokenSelect: React.FC = () => {
   const { inputChainId, outputChainId } = useContext(ChainIdContext);
@@ -67,7 +64,7 @@ const InputTokenSelect: React.FC = () => {
       <div className="flex flex-row">
         <div className="text-bg3 text-xs mr-2">Send</div>
         <div className="grow text-bg3 text-xs text-right font-medium">
-          {price && inputTokenAmount != "" && regexp.test(inputTokenAmount) &&
+          {price && inputTokenAmount != "" && isValidInput.test(inputTokenAmount) &&
             <>
               <input
                 disabled

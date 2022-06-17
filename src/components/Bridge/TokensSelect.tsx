@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import { getTokenBalanceByTokenAddress } from "../../services";
 import { queryResponseObj } from "../../types";
@@ -8,21 +8,9 @@ import { ChainIdContext, TokenDetailsContext } from "./WidgetWrapper";
 
 let inputTokenBalance = "0";
 
-type InputTokenAmountContent = {
-  inputTokenAmount: string;
-  setInputTokenAmount: (amount: string) => void;
-}
-
-export const InputTokenAmountContext = createContext<InputTokenAmountContent>({
-  inputTokenAmount: "",
-  setInputTokenAmount: () => {},
-});
-
 const TokensSelect: React.FC = () => {
   const { inputChainId } = useContext(ChainIdContext);
   const { inputTokenDetails } = useContext(TokenDetailsContext);
-
-  const [inputTokenAmount, setInputTokenAmount] = useState("");
 
   const tokenBalance: queryResponseObj = useQuery(
     ["tokenBalance", inputChainId, inputTokenDetails],
@@ -45,7 +33,6 @@ const TokensSelect: React.FC = () => {
   
   return (
     <>
-      <InputTokenAmountContext.Provider value={{ inputTokenAmount, setInputTokenAmount }}>
         <InputTokenSelect />
         <div className="mt-1">
           <div className="text-bg3 text-sm">
@@ -54,7 +41,6 @@ const TokensSelect: React.FC = () => {
         </div>
         <div className="h-3"></div>
         <OutputTokenSelect />
-      </InputTokenAmountContext.Provider>
     </>
   );
 };
