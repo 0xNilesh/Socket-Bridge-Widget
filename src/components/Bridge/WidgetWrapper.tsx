@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import { useQuery } from "react-query";
+import { getBridgeDataByBridgeName } from "../../helpers";
 import { getQuote, getSupportedChains } from "../../services";
 import { getSupportedBridges } from "../../services";
 import { getUserTokenBalances } from "../../services";
@@ -63,9 +64,13 @@ export const TokenDetailsContext = createContext<TokenDetailsContent>({
 export const RoutesContext = createContext({
   selectedRoute: {} as any,
   routes: [],
-  setRoutes: (routes: []) => {},
-  setSelectedRoute: (routes: any) => {}
-})
+  setRoutes: (routes: []) => { },
+  setSelectedRoute: (routes: any) => { }
+});
+
+export const BridgesContext = createContext({
+  bridgesByName: {} as any
+});
 
 const WidgetWrapper = () => {
   const widgetProps = useContext(PropsContext);
@@ -79,7 +84,8 @@ const WidgetWrapper = () => {
   //   )
   // );
 
-  // const bridgesResponse = useQuery(["bridges"], () => getSupportedBridges);
+  const bridgesResponse = useQuery(["bridges"], getSupportedBridges);
+  const [ bridgesByName ] = getBridgeDataByBridgeName(bridgesResponse);
 
   // if (gasPrice.isLoading) console.log("Loading...gasPrice");
   // else console.log('gasPrice', gasPrice.data);
@@ -98,17 +104,19 @@ const WidgetWrapper = () => {
   return (
     <>
       <TabIndexContext.Provider value={{ tabIndex, setTabIndex }}>
-        <ChainIdContext.Provider value={{ inputChainId, setInputChainId, outputChainId, setOutputChainId }}>
-          <TokenDetailsContext.Provider value={{ inputTokenDetails, setInputTokenDetails, outputTokenDetails, setOutputTokenDetails }}>
-            <RoutesContext.Provider value={{ selectedRoute, routes, setRoutes, setSelectedRoute }}>
-              <div style={{width: '528px', height: '538px', marginTop: "50px"}} className="rounded-xl bg-pr ml-32 p-6">
-                {tabIndex === 0 && <MainComponent />}
-                {tabIndex === 1 && <RouteSelector />}
-                {tabIndex === 2 && <GasSelector />}
-              </div>
-            </RoutesContext.Provider>
-          </TokenDetailsContext.Provider>
-        </ChainIdContext.Provider>
+        <BridgesContext.Provider value={{ bridgesByName }}>
+          <ChainIdContext.Provider value={{ inputChainId, setInputChainId, outputChainId, setOutputChainId }}>
+            <TokenDetailsContext.Provider value={{ inputTokenDetails, setInputTokenDetails, outputTokenDetails, setOutputTokenDetails }}>
+              <RoutesContext.Provider value={{ selectedRoute, routes, setRoutes, setSelectedRoute }}>
+                <div style={{width: '528px', height: '538px', marginTop: "50px"}} className="rounded-xl bg-pr ml-32 p-6">
+                  {tabIndex === 0 && <MainComponent />}
+                  {tabIndex === 1 && <RouteSelector />}
+                  {tabIndex === 2 && <GasSelector />}
+                </div>
+              </RoutesContext.Provider>
+            </TokenDetailsContext.Provider>
+          </ChainIdContext.Provider>
+        </BridgesContext.Provider>
       </TabIndexContext.Provider>
     </>
   );

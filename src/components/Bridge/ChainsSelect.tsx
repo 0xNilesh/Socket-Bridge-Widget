@@ -3,37 +3,9 @@ import { useQuery } from "react-query";
 import { getSupportedChains } from "../../services";
 import { ChainIdContext, TokenDetailsContext } from "./WidgetWrapper";
 import RightArrowSvg from "../../assets/right-arrow.svg";
-import { Obj } from "../../types";
 import InputChainSelect from "./InputChainSelect";
 import OutputChainSelect from "./OutputChainSelect";
-
-const getChainDataByChainId = (chains: any) => {
-  if (!chains.isSuccess) return [];
-
-  const data = chains.data?.data?.result;
-  const chainsByChainId: any = {};
-  const fromChainsList: Array<Obj> = [];
-  const toChainsList: Array<Obj> = [];
-
-	data.forEach((chain:any) => {
-		chainsByChainId[chain.chainId] = chain;
-    if (chain.sendingEnabled) {
-      fromChainsList.push({
-        chainId: chain.chainId,
-        name: chain.name,
-        icon: chain.icon
-      });
-    }
-    if (chain.receivingEnabled) {
-      toChainsList.push({
-        chainId: chain.chainId,
-        name: chain.name,
-        icon: chain.icon
-      });
-    }
-	});
-  return [chainsByChainId, fromChainsList, toChainsList];
-};
+import { getChainDataByChainId } from "../../helpers";
 
 const ChainsSelect: React.FC = () => {
   const chainsResponse = useQuery(["chains"], getSupportedChains);

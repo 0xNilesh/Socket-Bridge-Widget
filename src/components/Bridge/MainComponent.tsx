@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState } from "react";
 import { isValidInput } from "../../helpers";
 import ChainsSelect from "./ChainsSelect";
 import TokensSelect from "./TokensSelect";
-import { RoutesContext } from "./WidgetWrapper";
+import { BridgesContext, RoutesContext } from "./WidgetWrapper";
 
 type InputTokenAmountContent = {
   inputTokenAmount: string;
@@ -17,6 +17,7 @@ export const InputTokenAmountContext = createContext<InputTokenAmountContent>({
 const MainComponent = () => {
   const [inputTokenAmount, setInputTokenAmount] = useState("");
   const { selectedRoute } = useContext(RoutesContext);
+  const { bridgesByName } = useContext(BridgesContext);
 
   return (
     <>
@@ -38,9 +39,12 @@ const MainComponent = () => {
                   —
                 </div>
                 :
-                <button className="text-blue-500 capitalize">
-                  {selectedRoute.usedBridgeNames[0]}
-                </button>
+                <div className="flex flex-row">
+                  <img src={bridgesByName[selectedRoute.usedBridgeNames[0]].icon} className="w-5 h-5 rounded-full mr-1 self-center" />
+                  <button className="text-blue-500 capitalize">
+                    {bridgesByName ? bridgesByName[selectedRoute.usedBridgeNames[0]].displayName : selectedRoute.usedBridgeNames[0]}
+                  </button>
+                </div>
             }
           </div>
           <div className="h-4"></div>
