@@ -1,22 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ChainIdContext, TokenDetailsContext } from "./WidgetWrapper";
+import { ChainIdContext, InputTokenAmountContext, TokenDetailsContext } from "./WidgetWrapper";
 import { TokenSelectDropdown } from "../Dropdown";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 import { queryResponseObj } from "../../types";
 import { useQuery } from "react-query";
-import { getFromTokenList, getTokenPriceByTokenAddress } from "../../services";
-import { isValidInput, updateTokenList } from "../../helpers";
-import { InputTokenAmountContext } from "./MainComponent";
+import { getTokenPriceByTokenAddress } from "../../services";
+import { isValidInput } from "../../helpers";
 
 let price: any;
-let inputTokenList: any;
 
 const InputTokenSelect: React.FC = () => {
-  const { inputChainId, outputChainId } = useContext(ChainIdContext);
+  const { inputChainId } = useContext(ChainIdContext);
   const { inputTokenDetails, setInputTokenDetails } = useContext(TokenDetailsContext);
 
   const [hideInputTokenDropdown, setHideInputTokenDropdown] = useState(true);
-  const { inputTokenAmount, setInputTokenAmount } = useContext(InputTokenAmountContext);
+  const { inputTokenAmount, setInputTokenAmount, inputTokenList } = useContext(InputTokenAmountContext);
 
   const tokenPrice: queryResponseObj = useQuery(
     ["tokenPrice1", inputTokenDetails],
@@ -29,29 +27,6 @@ const InputTokenSelect: React.FC = () => {
     enabled: !!(inputTokenDetails.address != "")
   }
   );
-
-  const fromTokenList: queryResponseObj = useQuery(
-    ["fromTokenList", inputChainId],
-      () => getFromTokenList(
-        {
-          fromChainId: inputChainId.toString(),
-          toChainId: outputChainId.toString(),
-          isShortList: true
-        }
-      ), {
-      enabled: !!(inputChainId)
-    }
-  );
-
-  useEffect(() => {
-    if (fromTokenList.isSuccess) {
-      inputTokenList = fromTokenList.data?.data?.result;
-      const { address, icon, symbol, decimals } = inputTokenList.filter((token: any) => (token.symbol === 'USDC'))[0];
-      console.log(address, icon, symbol);
-      setInputTokenDetails({ address, icon, symbol, decimals });
-      inputTokenList = updateTokenList(inputChainId, inputTokenList);
-    }
-  }, [fromTokenList.isSuccess, inputChainId]);
 
   if (tokenPrice.isSuccess) {
     price = tokenPrice.data?.data?.result.tokenPrice;
@@ -105,6 +80,7 @@ const InputTokenSelect: React.FC = () => {
             placeholder="0"
             className="text-base font-medium bg-transparent w-full text-right border-none outline-none"
             onChange={(e) => setInputTokenAmount(e.target.value)}
+            value={inputTokenAmount}
           />
         </div>
       </div>

@@ -63,13 +63,13 @@ const Widget = ({
 export default Widget;
 
 /*
-  Select Bridge Component
-  Select Gas Component
-  Get provider from user
-  Select sort method of quote
-  Add themes
-  Make responsible acc to width
-  Complete main component
-  Transfer Button and methods
-  Final Progress Component
+  Select Bridge Component - Saturday
+  Select Gas Component - Confused
+  Get provider from user - Sunday
+  Select sort method of quote - Sunday
+  Add themes - Tuesday
+  Make responsible acc to width - Sunday
+  Transfer Button and methods - Monday
+  Final Progress Component - Monday
+  Readme - Tuesday
 */

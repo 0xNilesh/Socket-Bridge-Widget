@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { ChainIdContext, RoutesContext, TokenDetailsContext } from "./WidgetWrapper";
+import { ChainIdContext, InputTokenAmountContext, RoutesContext, TokenDetailsContext } from "./WidgetWrapper";
 import { TokenSelectDropdown } from "../Dropdown";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 import { queryResponseObj } from "../../types";
@@ -8,7 +8,6 @@ import { getToTokenList, getQuote, getTokenPriceByTokenAddress } from "../../ser
 import { isValidInput, updateTokenList } from "../../helpers";
 
 import debounce from "lodash.debounce";
-import { InputTokenAmountContext } from "./MainComponent";
 let DEBOUNCE_TIMEOUT = 1500;
 
 let price: any;
