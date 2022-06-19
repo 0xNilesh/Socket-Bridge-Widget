@@ -41,7 +41,7 @@ const MainComponent = () => {
       <div className="flex flex-col">
         <ChainsSelect />
         <div className="h-3"></div>
-          <TokensSelect />
+        <TokensSelect />
         <div className="h-3"></div>
         <div className="h-3"></div>
         <div className="flex flex-col text-fc text-sm font-normal">

@@ -39,6 +39,7 @@ const InputChainSelect: React.FC<Props> = ({ chainsByChainId, fromChainsList, sw
             <ChainSelectDropdown
               options={fromChainsList}
               setChain={(chainId) => {
+                if (chainId === inputChainId) return;
                 setInputTokenDetails({ address: "", icon: "", symbol: "", decimals: 0 })
                 if (chainId == outputChainId) swap();
                 else setInputChainId(chainId)

@@ -103,7 +103,7 @@ const WidgetWrapper = () => {
   // if (bridgesResponse.isLoading) console.log("Loading...bridges");
   // else console.log('bridges', bridgesResponse.data);
 
-  const [tabIndex, setTabIndex] = useState(1);
+  const [tabIndex, setTabIndex] = useState(0);
   const [inputChainId, setInputChainId] = useState((widgetProps as any).defaultInputChainId);
   const [outputChainId, setOutputChainId] = useState((widgetProps as any).defaultOutputChainId);
   const [inputTokenDetails, setInputTokenDetails] = useState({ address: "", symbol: "", icon: "", decimals: 0 });
@@ -166,7 +166,7 @@ const WidgetWrapper = () => {
             <InputTokenAmountContext.Provider value={{ inputTokenAmount, setInputTokenAmount, inputTokenList, outputTokenList }}>
               <TokenDetailsContext.Provider value={{ inputTokenDetails, setInputTokenDetails, outputTokenDetails, setOutputTokenDetails }}>
                 <RoutesContext.Provider value={{ selectedRoute, routes, setRoutes, setSelectedRoute }}>
-                  <div style={{width: '528px', height: '538px', marginTop: "50px"}} className="rounded-xl bg-pr ml-32 p-6">
+                  <div style={{width: '528px', marginTop: "50px"}} className="rounded-xl bg-pr ml-32 p-6">
                     {tabIndex === 0 && <MainComponent />}
                     {tabIndex === 1 && <RouteSelector />}
                     {tabIndex === 2 && <GasSelector />}
