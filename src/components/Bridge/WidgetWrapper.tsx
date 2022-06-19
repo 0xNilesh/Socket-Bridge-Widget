@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { getBridgeDataByBridgeName, updateTokenList } from "../../helpers";
-import { getFromTokenList, getSupportedBridges } from "../../services";
+import { getFromTokenList, getSupportedBridges, getToTokenList } from "../../services";
 import { queryResponseObj } from "../../types";
 import GasSelector from "./GasSelector";
 import MainComponent from "./MainComponent";
@@ -58,12 +58,14 @@ type InputTokenAmountContent = {
   inputTokenAmount: string;
   setInputTokenAmount: (amount: string) => void;
   inputTokenList: any;
+  outputTokenList: any;
 }
 
 export const InputTokenAmountContext = createContext<InputTokenAmountContent>({
   inputTokenAmount: "",
   setInputTokenAmount: () => { },
-  inputTokenList: {}
+  inputTokenList: {},
+  outputTokenList: {}
 });
 
 export const RoutesContext = createContext({
@@ -78,6 +80,7 @@ export const BridgesContext = createContext({
 });
 
 let inputTokenList: any;
+let outputTokenList: any;
 
 const WidgetWrapper = () => {
   const widgetProps = useContext(PropsContext);
@@ -122,6 +125,20 @@ const WidgetWrapper = () => {
     }
   );
 
+  const toTokenList: queryResponseObj = useQuery(
+    ["toTokenList", outputChainId],
+    () => getToTokenList(
+      {
+        fromChainId: inputChainId.toString(),
+        toChainId: outputChainId.toString(),
+        isShortList: true
+      }
+    ),
+    {
+      enabled: !!(outputChainId)
+    }
+  );
+
   useEffect(() => {
     if (fromTokenList.isSuccess) {
       inputTokenList = fromTokenList.data?.data?.result;
@@ -132,12 +149,21 @@ const WidgetWrapper = () => {
     }
   }, [fromTokenList.isSuccess, inputChainId]);
 
+  useEffect(() => {
+    if (toTokenList.isSuccess) {
+      outputTokenList = toTokenList.data?.data?.result;
+      const { address, icon, symbol, decimals } = outputTokenList.filter((token: any) => (token.symbol === 'USDC'))[0];
+      setOutputTokenDetails({ address, icon, symbol, decimals });
+      outputTokenList = updateTokenList(outputChainId, outputTokenList);
+    }
+  }, [toTokenList.isSuccess, outputChainId]);
+
   return (
     <>
       <TabIndexContext.Provider value={{ tabIndex, setTabIndex }}>
         <BridgesContext.Provider value={{ bridgesByName }}>
           <ChainIdContext.Provider value={{ inputChainId, setInputChainId, outputChainId, setOutputChainId }}>
-            <InputTokenAmountContext.Provider value={{ inputTokenAmount, setInputTokenAmount, inputTokenList }}>
+            <InputTokenAmountContext.Provider value={{ inputTokenAmount, setInputTokenAmount, inputTokenList, outputTokenList }}>
               <TokenDetailsContext.Provider value={{ inputTokenDetails, setInputTokenDetails, outputTokenDetails, setOutputTokenDetails }}>
                 <RoutesContext.Provider value={{ selectedRoute, routes, setRoutes, setSelectedRoute }}>
                   <div style={{width: '528px', height: '538px', marginTop: "50px"}} className="rounded-xl bg-pr ml-32 p-6">

@@ -21,7 +21,7 @@ const OutputTokenSelect: React.FC = () => {
   const [hideOutputTokenDropdown, setHideOutputTokenDropdown] = useState(true);
   const [fetchRoute, setFetchRoute] = useState(false);
   const { selectedRoute, setRoutes, setSelectedRoute } = useContext(RoutesContext);
-  const { inputTokenAmount } = useContext(InputTokenAmountContext);
+  const { inputTokenAmount, outputTokenList } = useContext(InputTokenAmountContext);
 
   const tokenPrice: queryResponseObj = useQuery(
     ["tokenPrice2", outputTokenDetails],
@@ -32,20 +32,6 @@ const OutputTokenSelect: React.FC = () => {
         }
       ), {
       enabled: !!(outputTokenDetails.address)
-    }
-  );
-
-  const toTokenList: queryResponseObj = useQuery(
-    ["toTokenList", outputChainId],
-    () => getToTokenList(
-      {
-        fromChainId: inputChainId.toString(),
-        toChainId: outputChainId.toString(),
-        isShortList: true
-      }
-    ),
-    {
-      enabled: !!(outputChainId)
     }
   );
 
@@ -99,15 +85,6 @@ const OutputTokenSelect: React.FC = () => {
     }
     debouncedFetchRouteCall();
   }, [inputTokenAmount, inputTokenDetails.address, outputTokenDetails.address]);
-
-  useEffect(() => {
-    if (toTokenList.isSuccess) {
-      outputTokenList = toTokenList.data?.data?.result;
-      const { address, icon, symbol, decimals } = outputTokenList.filter((token: any) => (token.symbol === 'USDC'))[0];
-      setOutputTokenDetails({ address, icon, symbol, decimals });
-      outputTokenList = updateTokenList(outputChainId, outputTokenList);
-    }
-  }, [toTokenList.isSuccess, outputChainId]);
 
   if (tokenPrice.isSuccess) {
     price = tokenPrice.data?.data?.result.tokenPrice;
