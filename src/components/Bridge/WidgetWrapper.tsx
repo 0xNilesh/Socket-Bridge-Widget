@@ -103,7 +103,7 @@ const WidgetWrapper = () => {
   // if (bridgesResponse.isLoading) console.log("Loading...bridges");
   // else console.log('bridges', bridgesResponse.data);
 
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(1);
   const [inputChainId, setInputChainId] = useState((widgetProps as any).defaultInputChainId);
   const [outputChainId, setOutputChainId] = useState((widgetProps as any).defaultOutputChainId);
   const [inputTokenDetails, setInputTokenDetails] = useState({ address: "", symbol: "", icon: "", decimals: 0 });

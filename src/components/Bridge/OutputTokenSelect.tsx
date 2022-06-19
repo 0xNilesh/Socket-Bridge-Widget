@@ -118,7 +118,7 @@ const OutputTokenSelect: React.FC = () => {
               {/* <img src={chainsByChainId[outputChainId].currency.icon} className="w-4 h-4 rounded-full mr-1 self-center" /> */}
               <div className="mr-2">Loading...</div>
               <div className="self-center">
-                <DownArrowSvg className="rotate-90 mr-1" />
+                <DownArrowSvg className="rotate-90 mr-1" style={{width: 6, height: 10}} />
               </div>
             </>
           }
@@ -127,7 +127,7 @@ const OutputTokenSelect: React.FC = () => {
               <img src={outputTokenDetails.icon} className="w-4 h-4 rounded-full mr-1 self-center" />
               <div className="mr-2">{outputTokenDetails.symbol}</div>
               <div className="self-center">
-                <DownArrowSvg className="rotate-90 mr-1" />
+                <DownArrowSvg className="rotate-90 mr-1" style={{width: 6, height: 10}} />
               </div>
             </>
           }

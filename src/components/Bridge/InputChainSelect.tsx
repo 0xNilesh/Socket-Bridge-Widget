@@ -33,7 +33,7 @@ const InputChainSelect: React.FC<Props> = ({ chainsByChainId, fromChainsList, sw
             }
           </div>
           <div className="self-center">
-            <DownArrowSvg className="rotate-90" />
+            <DownArrowSvg className="rotate-90" style={{width: 6, height: 10}} />
           </div>
           {!hideInputChainDropdown && fromChainsList &&
             <ChainSelectDropdown
