@@ -63,7 +63,6 @@ const Widget = ({
 export default Widget;
 
 /*
-  Select Bridge Component - Saturday
   Select Gas Component - Confused
   Get provider from user - Sunday
   Select sort method of quote - Sunday
