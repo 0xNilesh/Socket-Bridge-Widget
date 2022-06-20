@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { getBridgeDataByBridgeName, updateTokenList } from "../../helpers";
 import { getFromTokenList, getSupportedBridges, getToTokenList } from "../../services";
-import { ChainIdContent, InputTokenAmountContent, queryResponseObj, TabIndexContent, TokenDetailsContent } from "../../types";
+import { ChainIdContent, InputTokenAmountContent, queryResponseObj, RoutesContent, SortTypeContent, TabIndexContent, TokenDetailsContent } from "../../types";
 import GasSelector from "./GasSelector";
 import MainComponent from "./MainComponent";
 import RouteSelector from "./RouteSelector";
@@ -35,7 +35,7 @@ export const InputTokenAmountContext = createContext<InputTokenAmountContent>({
   outputTokenList: {}
 });
 
-export const RoutesContext = createContext({
+export const RoutesContext = createContext<RoutesContent>({
   selectedRoute: {} as any,
   routes: [],
   setRoutes: (routes: []) => { },
@@ -44,6 +44,11 @@ export const RoutesContext = createContext({
 
 export const BridgesContext = createContext({
   bridgesByName: {} as any
+});
+
+export const SortTypeContext = createContext<SortTypeContent>({
+  sortType: "output",
+  setSortType: () => {}
 });
 
 let inputTokenList: any;
@@ -75,7 +80,7 @@ const WidgetWrapper = () => {
   const [inputTokenAmount, setInputTokenAmount] = useState("");
   const [routes, setRoutes] = useState([]);
   const [selectedRoute, setSelectedRoute] = useState({});
-  const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
+  const [sortType, setSortType] = useState("output" as any);
 
   const fromTokenList: queryResponseObj = useQuery(
     ["fromTokenList", inputChainId],
@@ -131,11 +136,13 @@ const WidgetWrapper = () => {
             <InputTokenAmountContext.Provider value={{ inputTokenAmount, setInputTokenAmount, inputTokenList, outputTokenList }}>
               <TokenDetailsContext.Provider value={{ inputTokenDetails, setInputTokenDetails, outputTokenDetails, setOutputTokenDetails }}>
                 <RoutesContext.Provider value={{ selectedRoute, routes, setRoutes, setSelectedRoute }}>
-                  <div style={{width: '528px', marginTop: "50px"}} className="rounded-xl bg-pr ml-32 p-6">
-                    {tabIndex === 0 && <MainComponent />}
-                    {tabIndex === 1 && <RouteSelector />}
-                    {tabIndex === 2 && <GasSelector />}
-                  </div>
+                  <SortTypeContext.Provider value={{ sortType, setSortType }}>
+                    <div style={{width: '528px', marginTop: "50px"}} className="rounded-xl bg-pr ml-32 p-6">
+                      {tabIndex === 0 && <MainComponent />}
+                      {tabIndex === 1 && <RouteSelector />}
+                      {tabIndex === 2 && <GasSelector />}
+                    </div>
+                  </SortTypeContext.Provider>
                 </RoutesContext.Provider>
               </TokenDetailsContext.Provider>
             </InputTokenAmountContext.Provider>

@@ -30,6 +30,8 @@ export type TokenDetail = {
   decimals: number
 }
 
+export type SortType = "output" | "time" | "gas";
+
 export type ChainIdContent = {
   inputChainId: number;
   outputChainId: number;
@@ -54,4 +56,16 @@ export type InputTokenAmountContent = {
   setInputTokenAmount: (amount: string) => void;
   inputTokenList: any;
   outputTokenList: any;
+}
+
+export type RoutesContent = {
+  selectedRoute: any;
+  routes: Array<any>;
+  setRoutes: (routes: []) => void;
+  setSelectedRoute: (routes: any) => void;
+}
+
+export type SortTypeContent = {
+  sortType: SortType;
+  setSortType: (type: string) => void;
 }

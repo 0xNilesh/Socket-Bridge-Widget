@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { isValidInput } from "../../helpers";
+import BridgeTypeSort from "./BridgeTypeSort";
 import ChainsSelect from "./ChainsSelect";
 import TokensSelect from "./TokensSelect";
 import { BridgesContext, InputTokenAmountContext, RoutesContext, TabIndexContext } from "./WidgetWrapper";
@@ -41,6 +42,8 @@ const MainComponent: React.FC = () => {
   return (
     <>
       <div className="flex flex-col">
+        <BridgeTypeSort />
+        <div className="h-3"></div>
         <ChainsSelect />
         <div className="h-3"></div>
         <TokensSelect />

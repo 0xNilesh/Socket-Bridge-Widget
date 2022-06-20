@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { ChainIdContext, InputTokenAmountContext, RoutesContext, TokenDetailsContext } from "./WidgetWrapper";
+import { ChainIdContext, InputTokenAmountContext, RoutesContext, SortTypeContext, TokenDetailsContext } from "./WidgetWrapper";
 import { TokenSelectDropdown } from "../Dropdown";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 import { queryResponseObj } from "../../types";
@@ -22,6 +22,8 @@ const OutputTokenSelect: React.FC = () => {
   const [fetchRoute, setFetchRoute] = useState(false);
   const { selectedRoute, setRoutes, setSelectedRoute } = useContext(RoutesContext);
   const { inputTokenAmount, outputTokenList } = useContext(InputTokenAmountContext);
+  const { sortType } = useContext(SortTypeContext);
+  
   const isMount = useIsMount();
 
   const tokenPrice: queryResponseObj = useQuery(
@@ -37,7 +39,7 @@ const OutputTokenSelect: React.FC = () => {
   );
 
   quoteList = useQuery(
-    ["quoteList", inputTokenDetails.address, outputTokenDetails.address, inputTokenAmount],
+    ["quoteList", inputTokenDetails.address, outputTokenDetails.address, inputTokenAmount, sortType],
       () => {
         console.log("calling me", fetchRoute);
         setFetchRoute(false);
@@ -50,7 +52,7 @@ const OutputTokenSelect: React.FC = () => {
             fromAmount: (parseFloat(inputTokenAmount) * (10 ** inputTokenDetails.decimals)).toLocaleString().split(',').join(''),
             userAddress: "0x087f5052fbcd7c02dd45fb9907c57f1eccc2be25",
             uniqueRoutesPerBridge: true,
-            sort: "output",
+            sort: sortType,
             singleTxOnly: true
           }
         )
@@ -62,17 +64,17 @@ const OutputTokenSelect: React.FC = () => {
   useEffect(() => {
     if (isMount) return;
     if (quoteList.isSuccess) {
-      console.log("calling me 23");
       const response: any = quoteList.data?.data?.result;
       if (response?.routes.length) {
-        setSelectedRoute(response?.routes[0]);
+        if (sortType === "output") setSelectedRoute(response?.routes[0]);
+        else setSelectedRoute(response?.routes[response?.routes.length-1]);
         setRoutes(response?.routes);
       } else {
         setSelectedRoute({});
         setRoutes([]);
       }
     }
-  }, [quoteList.isSuccess, inputTokenDetails.address, outputTokenDetails.address, inputTokenAmount]);
+  }, [quoteList.isSuccess, inputTokenDetails.address, outputTokenDetails.address, inputTokenAmount, sortType]);
 
   const debouncedFetchRouteCall = useCallback(
     debounce(() => {
@@ -89,7 +91,7 @@ const OutputTokenSelect: React.FC = () => {
       return;
     }
     debouncedFetchRouteCall();
-  }, [inputTokenAmount, inputTokenDetails.address, outputTokenDetails.address]);
+  }, [inputTokenAmount, inputTokenDetails.address, outputTokenDetails.address, sortType]);
 
   if (tokenPrice.isSuccess) {
     price = tokenPrice.data?.data?.result.tokenPrice;
