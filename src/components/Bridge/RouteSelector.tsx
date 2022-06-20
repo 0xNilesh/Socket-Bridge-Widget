@@ -1,12 +1,30 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { RoutesContext, TabIndexContext, TokenDetailsContext } from "./WidgetWrapper";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 import RouteInfoButton from "./RouteInfoButton";
+import { PrimaryButton } from "../Button";
 
 const RouteSelector: React.FC = () => {
   const { setTabIndex } = useContext(TabIndexContext);
   const { outputTokenDetails } = useContext(TokenDetailsContext);
-  const { routes } = useContext(RoutesContext);
+  const { routes, selectedRoute, setSelectedRoute } = useContext(RoutesContext);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+    routes.map((route, index) => {
+      if (route === selectedRoute) {
+        setSelectedIndex(index);
+        return;
+      }
+    })
+  }, [routes]);
+
+  const saveSelectedRoute = () => {
+    setSelectedRoute(routes[selectedIndex]);
+    setTabIndex(0);
+  }
+
+  console.log(selectedRoute);
 
   return (
     <div>
@@ -32,14 +50,28 @@ const RouteSelector: React.FC = () => {
       </div>
       <div className="h-3"></div>
       <div className="flex flex-col">
-        {routes.map((route) => {
+        {routes.map((route, index) => {
           return (
-            <div>
-              <RouteInfoButton route={route} />
+            <div key={index}>
+              <RouteInfoButton
+                route={route}
+                selectedIndex={selectedIndex}
+                setSelectedIndex={setSelectedIndex}
+                index={index}
+              />
               <div className="h-2"></div>
             </div>
           );
         })}
+      </div>
+      <div className="h-4"></div>
+      <div className="h-3"></div>
+      <div>
+        <PrimaryButton
+          buttonText="Save for this transfer"
+          bgColor="#296CF4"
+          onClick={saveSelectedRoute}
+        />
       </div>
     </div>
   );

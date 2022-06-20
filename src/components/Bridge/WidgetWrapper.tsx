@@ -111,6 +111,7 @@ const WidgetWrapper = () => {
   const [inputTokenAmount, setInputTokenAmount] = useState("");
   const [routes, setRoutes] = useState([]);
   const [selectedRoute, setSelectedRoute] = useState({});
+  const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
 
   const fromTokenList: queryResponseObj = useQuery(
     ["fromTokenList", inputChainId],

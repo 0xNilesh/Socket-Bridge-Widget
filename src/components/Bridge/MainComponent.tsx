@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { isValidInput } from "../../helpers";
 import ChainsSelect from "./ChainsSelect";
 import TokensSelect from "./TokensSelect";
@@ -12,6 +12,8 @@ const MainComponent = () => {
   const [bridgeFee, setBridgeFee] = useState("");
 
   let isValid = Object.keys(selectedRoute).length === 0 || inputTokenAmount === "" || !isValidInput.test(inputTokenAmount);
+
+  console.log("hello", selectedRoute);
 
   useEffect(() => {
     if (Object.keys(selectedRoute).length === 0) return;
@@ -29,7 +31,7 @@ const MainComponent = () => {
     })
 
     let fees = "";
-    fees = (parseInt(bridgeStep.protocolFees.amount) / 10 ** (bridgeStep.protocolFees.asset.decimals)).toPrecision(4).toString();
+    fees = (parseInt(bridgeStep.protocolFees.amount) / 10 ** (bridgeStep.protocolFees.asset.decimals)).toFixed(2).toString();
     fees += " " + bridgeStep.protocolFees.asset.symbol;
     fees += " ($" + (bridgeStep.protocolFees.feesInUsd).toString() + ")";
 
@@ -89,7 +91,7 @@ const MainComponent = () => {
             {
               isValid 
                 ? <div>—</div>
-                : <div>~ ${ (selectedRoute.totalGasFeesInUsd).toPrecision(3).toString() }</div>
+                : <div>~ ${ (selectedRoute.totalGasFeesInUsd).toFixed(2).toString() }</div>
             }
           </div>
         </div>

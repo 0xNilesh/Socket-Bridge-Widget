@@ -4,14 +4,14 @@ import { TokenSelectDropdown } from "../Dropdown";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 import { queryResponseObj } from "../../types";
 import { useQuery } from "react-query";
-import { getToTokenList, getQuote, getTokenPriceByTokenAddress } from "../../services";
-import { isValidInput, updateTokenList } from "../../helpers";
+import { getQuote, getTokenPriceByTokenAddress } from "../../services";
+import { isValidInput } from "../../helpers";
 
 import debounce from "lodash.debounce";
+import { useIsMount } from "../../hooks";
 let DEBOUNCE_TIMEOUT = 1500;
 
 let price: any;
-let outputTokenList: any;
 let quoteList: queryResponseObj;
 
 const OutputTokenSelect: React.FC = () => {
@@ -22,6 +22,7 @@ const OutputTokenSelect: React.FC = () => {
   const [fetchRoute, setFetchRoute] = useState(false);
   const { selectedRoute, setRoutes, setSelectedRoute } = useContext(RoutesContext);
   const { inputTokenAmount, outputTokenList } = useContext(InputTokenAmountContext);
+  const isMount = useIsMount();
 
   const tokenPrice: queryResponseObj = useQuery(
     ["tokenPrice2", outputTokenDetails],
@@ -38,7 +39,7 @@ const OutputTokenSelect: React.FC = () => {
   quoteList = useQuery(
     ["quoteList", inputTokenDetails.address, outputTokenDetails.address, inputTokenAmount],
       () => {
-        console.log("calling");
+        console.log("calling me", fetchRoute);
         setFetchRoute(false);
         return getQuote(
           {
@@ -59,7 +60,9 @@ const OutputTokenSelect: React.FC = () => {
   );
 
   useEffect(() => {
+    if (isMount) return;
     if (quoteList.isSuccess) {
+      console.log("calling me 23");
       const response: any = quoteList.data?.data?.result;
       if (response?.routes.length) {
         setSelectedRoute(response?.routes[0]);
@@ -80,6 +83,8 @@ const OutputTokenSelect: React.FC = () => {
   
   // debounce to reduce API calls while typing
   useEffect(() => {
+    if (isMount) return;
+    console.log("hello debounce");
     if (!isValidInput.test(inputTokenAmount) || inputTokenAmount == "") {
       return;
     }

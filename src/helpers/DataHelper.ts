@@ -34,8 +34,6 @@ export const getBridgeDataByBridgeName = (bridges: any) => {
   const data = bridges.data?.data?.result;
   const bridgesByName: any = {};
 
-  console.log(data, bridges);
-
   data.forEach((bridge: any) => {
     bridgesByName[bridge.bridgeName] = bridge;
   });
