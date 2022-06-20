@@ -4,7 +4,7 @@ import ChainsSelect from "./ChainsSelect";
 import TokensSelect from "./TokensSelect";
 import { BridgesContext, InputTokenAmountContext, RoutesContext, TabIndexContext } from "./WidgetWrapper";
 
-const MainComponent = () => {
+const MainComponent: React.FC = () => {
   const { selectedRoute } = useContext(RoutesContext);
   const { bridgesByName } = useContext(BridgesContext);
   const { setTabIndex } = useContext(TabIndexContext);

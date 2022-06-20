@@ -2,38 +2,12 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { getBridgeDataByBridgeName, updateTokenList } from "../../helpers";
 import { getFromTokenList, getSupportedBridges, getToTokenList } from "../../services";
-import { queryResponseObj } from "../../types";
+import { ChainIdContent, InputTokenAmountContent, queryResponseObj, TabIndexContent, TokenDetailsContent } from "../../types";
 import GasSelector from "./GasSelector";
 import MainComponent from "./MainComponent";
 import RouteSelector from "./RouteSelector";
 
 import { PropsContext } from "./Widget";
-
-export type ChainIdContent = {
-  inputChainId: number;
-  outputChainId: number;
-  setInputChainId: (chainId: number) => void;
-  setOutputChainId: (chainId: number) => void;
-}
-
-export type TabIndexContent = {
-  tabIndex: number;
-  setTabIndex: (index: number) => void;
-}
-
-interface TokenDetail {
-  address: string,
-  symbol: string,
-  icon: string,
-  decimals: number
-}
-
-export type TokenDetailsContent = {
-  inputTokenDetails: TokenDetail;
-  outputTokenDetails: TokenDetail;
-  setInputTokenDetails: (Obj: TokenDetail) => void;
-  setOutputTokenDetails: (Obj: TokenDetail) => void;
-}
 
 export const TabIndexContext = createContext<TabIndexContent>({
   tabIndex: 0,
@@ -53,13 +27,6 @@ export const TokenDetailsContext = createContext<TokenDetailsContent>({
   setInputTokenDetails: () => { },
   setOutputTokenDetails: () => { }
 });
-
-type InputTokenAmountContent = {
-  inputTokenAmount: string;
-  setInputTokenAmount: (amount: string) => void;
-  inputTokenList: any;
-  outputTokenList: any;
-}
 
 export const InputTokenAmountContext = createContext<InputTokenAmountContent>({
   inputTokenAmount: "",
@@ -99,9 +66,6 @@ const WidgetWrapper = () => {
 
   // if (gasPrice.isLoading) console.log("Loading...gasPrice");
   // else console.log('gasPrice', gasPrice.data);
-
-  // if (bridgesResponse.isLoading) console.log("Loading...bridges");
-  // else console.log('bridges', bridgesResponse.data);
 
   const [tabIndex, setTabIndex] = useState(0);
   const [inputChainId, setInputChainId] = useState((widgetProps as any).defaultInputChainId);

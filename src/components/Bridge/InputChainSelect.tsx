@@ -4,7 +4,7 @@ import { ChainSelectDropdown } from "../Dropdown";
 import { ChainIdContext, TokenDetailsContext } from "./WidgetWrapper";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 
-interface Props {
+type Props = {
   chainsByChainId: any
   fromChainsList: Array<ChainDetail>
   swap: any
