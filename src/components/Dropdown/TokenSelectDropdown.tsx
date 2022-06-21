@@ -1,8 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useClickAway } from "../../hooks";
 import { useQuery } from "react-query";
 import { getIfTokenSupported, getUserTokenBalances } from "../../services";
 import { ethers } from "ethers";
+import { useWeb3Context } from "../Bridge/Widget";
   
 interface TokenDetail {
   address: string,
@@ -54,19 +55,21 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
   options.sort((a, b) => a.symbol > b.symbol ? 1 : (a.symbol < b.symbol ? -1 : 0));
 
   const [moreOptions, setMoreOptions] = useState(options);
+  const { account } = useContext(useWeb3Context);
   const [filteredResults, setFilteredResults] = useState(moreOptions);
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddress, setIsAddress] = useState(false);
   const clickAwayRef = useRef<HTMLDivElement>(null);
-  // console.log(moreOptions);
 
   const balanceResponse = useQuery(
     ["userTokenBalances"],
     () => getUserTokenBalances(
       {
-        userAddress: '0x087f5052fbcd7c02dd45fb9907c57f1eccc2be25'
+        userAddress: account
       }
-    )
+    ), {
+      enabled: !!(account && account != "")
+    }
   );
   
   let newToken: any = {};
@@ -117,9 +120,9 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
     } else {
       cust = {};
     }
-    if (!cust["0x087f5052fbcd7c02dd45fb9907c57f1eccc2be25"]) cust["0x087f5052fbcd7c02dd45fb9907c57f1eccc2be25"] = {};
-    if (!cust["0x087f5052fbcd7c02dd45fb9907c57f1eccc2be25"][chainId]) cust["0x087f5052fbcd7c02dd45fb9907c57f1eccc2be25"][chainId] = [];
-    cust["0x087f5052fbcd7c02dd45fb9907c57f1eccc2be25"][chainId].push(tokenDetail);
+    if (!cust[account]) cust[account] = {};
+    if (!cust[account][chainId]) cust[account][chainId] = [];
+    cust[account][chainId].push(tokenDetail);
     localStorage.setItem('customTokens', JSON.stringify(cust));
     setMoreOptions([tokenDetail, ...moreOptions]);
   }
@@ -170,14 +173,15 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
           })}
           {(filteredResults.length === 0 && newToken.address) &&
             <div
-                className="flex mx-2 my-3 p-1 rounded-lg h-10 items-center text-sm font-medium"
-                key={newToken.address}
-              >
-                <img src={newToken.icon} className="w-7 h-7 rounded-full mr-2" />
-                <div className="grow">
-                  <div>{newToken.symbol}</div>
-                  <div className="text-bg3 text-sm">{newToken.name}</div>
-                </div>
+              className="flex mx-2 my-3 p-1 rounded-lg h-10 items-center text-sm font-medium"
+              key={newToken.address}
+            >
+              <img src={newToken.icon} className="w-7 h-7 rounded-full mr-2" />
+              <div className="grow">
+                <div>{newToken.symbol}</div>
+                <div className="text-bg3 text-sm">{newToken.name}</div>
+              </div>
+              {account &&
                 <button
                   className="flex flex-row w-32 bg-pink-400 hover:bg-pink-800 w-full items-center justify-center whitespace-nowrap text-white rounded-lg font-medium text-sm px-3 h-10 cursor-pointer"
                   onClick={() => {
@@ -188,6 +192,7 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
                 >
                   Import Token
                 </button>
+              }
             </div>
           }
           {(filteredResults.length === 0 && !newToken.address) &&

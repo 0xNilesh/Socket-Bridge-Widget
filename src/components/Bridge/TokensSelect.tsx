@@ -4,11 +4,13 @@ import { getTokenBalanceByTokenAddress } from "../../services";
 import { queryResponseObj } from "../../types";
 import InputTokenSelect from "./InputTokenSelect";
 import OutputTokenSelect from "./OutputTokenSelect";
+import { useWeb3Context } from "./Widget";
 import { ChainIdContext, TokenDetailsContext } from "./WidgetWrapper";
 
 let inputTokenBalance = "0";
 
 const TokensSelect: React.FC = () => {
+  const { account } = useContext(useWeb3Context);
   const { inputChainId } = useContext(ChainIdContext);
   const { inputTokenDetails } = useContext(TokenDetailsContext);
 
@@ -18,10 +20,10 @@ const TokensSelect: React.FC = () => {
         {
           tokenAddress: inputTokenDetails.address,
           chainId: inputChainId.toString(),
-          userAddress: '0x087f5052fbcd7c02dd45fb9907c57f1eccc2be25'
+          userAddress: account
         }
       ), {
-      enabled: !!(inputTokenDetails.address)
+      enabled: !!(account && account != "" && inputTokenDetails.address)
     }
   );
 
@@ -35,9 +37,11 @@ const TokensSelect: React.FC = () => {
     <>
         <InputTokenSelect />
         <div className="mt-1">
+        {account &&
           <div className="text-bg3 text-sm">
             {<>{inputTokenBalance} {inputTokenDetails.symbol}</>}
           </div>
+        }
         </div>
         <div className="h-3"></div>
         <OutputTokenSelect />

@@ -9,12 +9,14 @@ import { isValidInput } from "../../helpers";
 
 import debounce from "lodash.debounce";
 import { useIsMount } from "../../hooks";
+import { useWeb3Context } from "./Widget";
 let DEBOUNCE_TIMEOUT = 1500;
 
 let price: any;
 let quoteList: queryResponseObj;
 
 const OutputTokenSelect: React.FC = () => {
+  const { account } = useContext(useWeb3Context);
   const { inputChainId, outputChainId } = useContext(ChainIdContext);
   const { inputTokenDetails, outputTokenDetails, setOutputTokenDetails } = useContext(TokenDetailsContext);
 
@@ -41,7 +43,6 @@ const OutputTokenSelect: React.FC = () => {
   quoteList = useQuery(
     ["quoteList", inputTokenDetails.address, outputTokenDetails.address, inputTokenAmount, sortType],
       () => {
-        console.log("calling me", fetchRoute);
         setFetchRoute(false);
         return getQuote(
           {
@@ -50,14 +51,14 @@ const OutputTokenSelect: React.FC = () => {
             toChainId: outputChainId.toString(),
             toTokenAddress: outputTokenDetails.address,
             fromAmount: (parseFloat(inputTokenAmount) * (10 ** inputTokenDetails.decimals)).toLocaleString().split(',').join(''),
-            userAddress: "0x087f5052fbcd7c02dd45fb9907c57f1eccc2be25",
+            userAddress: account,
             uniqueRoutesPerBridge: true,
             sort: sortType,
             singleTxOnly: true
           }
         )
       }, {
-      enabled: !!(inputTokenDetails.address && outputTokenDetails.address && isValidInput.test(inputTokenAmount) && fetchRoute === true && inputTokenAmount != "")
+      enabled: !!(account && account != "" && inputTokenDetails.address && outputTokenDetails.address && isValidInput.test(inputTokenAmount) && fetchRoute === true && inputTokenAmount != "")
     }
   );
 
