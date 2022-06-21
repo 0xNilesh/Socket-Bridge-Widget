@@ -32,6 +32,19 @@ export type TokenDetail = {
 
 export type SortType = "output" | "time" | "gas";
 
+export type useWeb3ProviderContent = {
+  account: string;
+  chainId: number;
+  signer: any;
+  w3Provider: any;
+}
+
+export type PropsContent = {
+  width: string;
+  defaultInputChainId: number;
+  defaultOutputChainId: number;
+}
+
 export type ChainIdContent = {
   inputChainId: number;
   outputChainId: number;

@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { getBridgeDataByBridgeName, updateTokenList } from "../../helpers";
+import { useWeb3 } from "../../hooks";
 import { getFromTokenList, getSupportedBridges, getToTokenList } from "../../services";
 import { ChainIdContent, InputTokenAmountContent, queryResponseObj, RoutesContent, SortTypeContent, TabIndexContent, TokenDetailsContent } from "../../types";
 import GasSelector from "./GasSelector";
 import MainComponent from "./MainComponent";
 import RouteSelector from "./RouteSelector";
 
-import { PropsContext } from "./Widget";
+import { PropsContext, useWeb3Context } from "./Widget";
 
 export const TabIndexContext = createContext<TabIndexContent>({
   tabIndex: 0,
@@ -81,6 +82,9 @@ const WidgetWrapper = () => {
   const [routes, setRoutes] = useState([]);
   const [selectedRoute, setSelectedRoute] = useState({});
   const [sortType, setSortType] = useState("output" as any);
+  const { account, chainId, signer } = useContext(useWeb3Context);
+
+  console.log(account, chainId, signer);
 
   const fromTokenList: queryResponseObj = useQuery(
     ["fromTokenList", inputChainId],

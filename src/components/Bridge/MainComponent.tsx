@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { isValidInput } from "../../helpers";
+import useWeb3 from "../../hooks/useWeb3";
 import BridgeTypeSort from "./BridgeTypeSort";
 import ChainsSelect from "./ChainsSelect";
 import TokensSelect from "./TokensSelect";
@@ -43,7 +44,7 @@ const MainComponent: React.FC = () => {
     <>
       <div className="flex flex-col">
         <BridgeTypeSort />
-        <div className="h-3"></div>
+        <div className="h-5"></div>
         <ChainsSelect />
         <div className="h-3"></div>
         <TokensSelect />
