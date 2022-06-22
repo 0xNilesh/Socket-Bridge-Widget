@@ -52,6 +52,10 @@ export const SortTypeContext = createContext<SortTypeContent>({
   setSortType: () => {}
 });
 
+export const WidgetWidthContext = createContext({
+  widgetWidth: 0
+});
+
 let inputTokenList: any;
 let outputTokenList: any;
 
@@ -84,7 +88,9 @@ const WidgetWrapper = () => {
   const [selectedRoute, setSelectedRoute] = useState({});
   const [sortType, setSortType] = useState("output" as any);
   const { account } = useContext(useWeb3Context);
-  const width = useBoxWidth(ref);
+  const widgetWidth = useBoxWidth(ref);
+
+  console.log(widgetWidth);
 
   const fromTokenList: queryResponseObj = useQuery(
     ["fromTokenList", inputChainId],
@@ -141,15 +147,17 @@ const WidgetWrapper = () => {
               <TokenDetailsContext.Provider value={{ inputTokenDetails, setInputTokenDetails, outputTokenDetails, setOutputTokenDetails }}>
                 <RoutesContext.Provider value={{ selectedRoute, routes, setRoutes, setSelectedRoute }}>
                   <SortTypeContext.Provider value={{ sortType, setSortType }}>
-                    <div
-                      style={{ width: '100%', marginTop: "50px" }}
-                      className="rounded-xl bg-pr p-6"
-                      ref={ref}
-                    >
-                      {tabIndex === 0 && <MainComponent />}
-                      {tabIndex === 1 && <RouteSelector />}
-                      {tabIndex === 2 && <GasSelector />}
-                    </div>
+                    <WidgetWidthContext.Provider value={{widgetWidth}}>
+                      <div
+                        style={{ width: '100%', marginTop: "50px" }}
+                        className="rounded-xl bg-pr p-6"
+                        ref={ref}
+                      >
+                        {tabIndex === 0 && <MainComponent />}
+                        {tabIndex === 1 && <RouteSelector />}
+                        {tabIndex === 2 && <GasSelector />}
+                      </div>
+                    </WidgetWidthContext.Provider>
                   </SortTypeContext.Provider>
                 </RoutesContext.Provider>
               </TokenDetailsContext.Provider>

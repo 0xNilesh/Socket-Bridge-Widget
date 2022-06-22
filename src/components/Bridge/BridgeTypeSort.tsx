@@ -1,11 +1,14 @@
 import React, { useContext } from "react";
-import { SortTypeContext } from "./WidgetWrapper";
+import { SortTypeContext, WidgetWidthContext } from "./WidgetWrapper";
 
 const BridgeTypeSort: React.FC = () => {
+  const { widgetWidth } = useContext(WidgetWidthContext);
   const { sortType, setSortType } = useContext(SortTypeContext);
 
   return (
-    <div className="grid grid-cols-3 gap-1 py-1 px-1 bg-bgLight rounded-lg text-xs">
+    <div
+      className={`${widgetWidth > 250 ? 'grid grid-cols-3' : 'flex flex-col'} gap-1 py-1 px-1 bg-bgLight rounded-lg text-xs`}
+    >
       <button
         className={`text-fc py-1 px-1 hover:bg-bg3 rounded-lg ${sortType === "output" ? "bg-pr" : ""}`}
         onClick={() => setSortType("output")}

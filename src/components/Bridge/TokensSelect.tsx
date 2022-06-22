@@ -36,13 +36,15 @@ const TokensSelect: React.FC = () => {
   return (
     <>
         <InputTokenSelect />
-        <div className="mt-1">
         {account &&
-          <div className="text-bg3 text-sm">
-            {<>{inputTokenBalance} {inputTokenDetails.symbol}</>}
-          </div>
+          <>
+            <div className="mt-1">
+              <div className="text-bg3 text-sm">
+                {<>{inputTokenBalance} {inputTokenDetails.symbol}</>}
+              </div>    
+            </div>
+          </>
         }
-        </div>
         <div className="h-3"></div>
         <OutputTokenSelect />
     </>

@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { RoutesContext, TabIndexContext, TokenDetailsContext } from "./WidgetWrapper";
+import { RoutesContext, TabIndexContext, TokenDetailsContext, WidgetWidthContext } from "./WidgetWrapper";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 import RouteInfoButton from "./RouteInfoButton";
 import { PrimaryButton } from "../Button";
 
 const RouteSelector: React.FC = () => {
   const { setTabIndex } = useContext(TabIndexContext);
+  const { widgetWidth } = useContext(WidgetWidthContext);
   const { outputTokenDetails } = useContext(TokenDetailsContext);
   const { routes, selectedRoute, setSelectedRoute } = useContext(RoutesContext);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -41,14 +42,18 @@ const RouteSelector: React.FC = () => {
       </div>
       <div className="h-3"></div>
       <div className="h-4"></div>
-      <div className="grid grid-cols-5 gap-4 px-4 text-xs text-bg3 font-normal">
-        <div>Bridge</div>
-        <div>Receive ({outputTokenDetails.symbol})</div>
-        <div>Bridge Fee</div>
-        <div>Gas Fee</div>
-        <div>Time</div>
-      </div>
-      <div className="h-3"></div>
+      {widgetWidth > 500 &&
+        <>
+          <div className="grid grid-cols-5 gap-4 px-4 text-xs text-bg3 font-normal">
+            <div>Bridge</div>
+            <div>Receive ({outputTokenDetails.symbol})</div>
+            <div>Bridge Fee</div>
+            <div>Gas Fee</div>
+            <div>Time</div>
+          </div>
+          <div className="h-3"></div>
+        </>
+      }
       <div className="flex flex-col">
         {routes.map((route, index) => {
           return (

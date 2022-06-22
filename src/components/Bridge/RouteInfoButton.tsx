@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { BridgesContext, TokenDetailsContext } from "./WidgetWrapper";
+import { BridgesContext, TokenDetailsContext, WidgetWidthContext } from "./WidgetWrapper";
 
 type Props = {
   route: any;
@@ -10,6 +10,7 @@ type Props = {
 
 const RouteInfoButton: React.FC<Props> = ({ route, index, selectedIndex, setSelectedIndex }: Props) => {
   const { bridgesByName } = useContext(BridgesContext);
+  const { widgetWidth } = useContext(WidgetWidthContext);
   const { outputTokenDetails } = useContext(TokenDetailsContext);
   const [bridgeFee, setBridgeFee] = useState("");
 
@@ -36,19 +37,53 @@ const RouteInfoButton: React.FC<Props> = ({ route, index, selectedIndex, setSele
 
   return (
     <button
-      className={`grid grid-cols-5 gap-4 px-3 py-3 rounded-lg hover:cursor-pointer w-full text-left text-sm text-fc font-normal border ${index == selectedIndex ? "border-blue-500" : "border-bgLight"}`}
+      className={`${widgetWidth > 500 ? 'grid grid-cols-5 gap-4' : 'flex flex-col'} px-3 py-3 rounded-lg hover:cursor-pointer w-full text-left text-sm text-fc font-normal border ${index == selectedIndex ? "border-blue-500" : "border-bgLight"}`}
       onClick={() => setSelectedIndex(index)}
     >
-      <img
-        src={bridgesByName[route.usedBridgeNames[0]].icon}
-        className="w-6 h-6 rounded-full self-center"
-        title={bridgesByName[route.usedBridgeNames[0]].displayName}
-        alt={bridgesByName[route.usedBridgeNames[0]].displayName}
-      />
-      <div>{(parseInt(route.toAmount) / (10 ** outputTokenDetails.decimals)).toFixed(2).toString()}</div>
-      <div>~{bridgeFee}</div>
-      <div>${(route.totalGasFeesInUsd).toPrecision(3).toString()}</div>
-      <div>{(route.serviceTime / 60).toString()} min</div>
+      {widgetWidth > 500
+        ?
+        <>
+          <img
+            src={bridgesByName[route.usedBridgeNames[0]].icon}
+            className="w-6 h-6 rounded-full self-center"
+            title={bridgesByName[route.usedBridgeNames[0]].displayName}
+            alt={bridgesByName[route.usedBridgeNames[0]].displayName}
+          />
+          <div>{(parseInt(route.toAmount) / (10 ** outputTokenDetails.decimals)).toFixed(2).toString()}</div>
+          <div>~{bridgeFee}</div>
+          <div>${(route.totalGasFeesInUsd).toPrecision(3).toString()}</div>
+          <div>{(route.serviceTime / 60).toString()} min</div>
+        </>
+        :
+        <>
+          <div className="flex flex-row py-0.5 w-full text-xs mb-1 items-center">
+            <img
+              src={bridgesByName[route.usedBridgeNames[0]].icon}
+              className="w-6 h-6 rounded-full self-center"
+              title={bridgesByName[route.usedBridgeNames[0]].displayName}
+              alt={bridgesByName[route.usedBridgeNames[0]].displayName}
+            />
+            <div className="ml-2 font-medium text-base">{bridgesByName[route.usedBridgeNames[0]].displayName}</div>
+            <div></div>
+          </div>
+          <div className="flex flex-row py-0.5 w-full text-xs">
+            <div className="text-bg3 font-normal">Receive ({outputTokenDetails.symbol})</div>
+            <div className="grow text-right">{(parseInt(route.toAmount) / (10 ** outputTokenDetails.decimals)).toFixed(2).toString()}</div>
+          </div>
+          <div className="flex flex-row py-0.5 w-full text-xs">
+            <div className="text-bg3 font-normal">Bridge Fee</div>
+            <div className="grow text-right">~{bridgeFee}</div>
+          </div>
+          <div className="flex flex-row py-0.5 w-full text-xs">
+            <div className="text-bg3 font-normal">Gas Fee</div>
+            <div className="grow text-right">${(route.totalGasFeesInUsd).toPrecision(3).toString()}</div>
+          </div>
+          <div className="flex flex-row py-0.5 w-full text-xs">
+            <div className="text-bg3 font-normal">Time</div>
+            <div className="grow text-right">{(route.serviceTime / 60).toString()} min</div>
+          </div>
+        </>
+      }
     </button>
   )
 };

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import { getSupportedChains } from "../../services";
-import { ChainIdContext, TokenDetailsContext } from "./WidgetWrapper";
+import { ChainIdContext, TokenDetailsContext, WidgetWidthContext } from "./WidgetWrapper";
 import RightArrowSvg from "../../assets/right-arrow.svg";
 import InputChainSelect from "./InputChainSelect";
 import OutputChainSelect from "./OutputChainSelect";
@@ -12,6 +12,7 @@ const ChainsSelect: React.FC = () => {
 
   const { inputChainId, outputChainId, setInputChainId, setOutputChainId } = useContext(ChainIdContext);
   const { setInputTokenDetails, setOutputTokenDetails } = useContext(TokenDetailsContext);
+  const { widgetWidth } = useContext(WidgetWidthContext);
 
   const [chainsByChainId, fromChainsList, toChainsList] = getChainDataByChainId(chainsResponse);
 
@@ -27,24 +28,29 @@ const ChainsSelect: React.FC = () => {
   };
 
   return (
-    <div id="chain-select" className="grid grid-cols-11 gap-4 rounded-xl">
+    <div
+      id="chain-select"
+      className={`${widgetWidth > 450 ? 'grid grid-cols-11' : 'flex flex-col'} gap-3 rounded-xl`}
+    >
       <InputChainSelect
         chainsByChainId={chainsByChainId}
         fromChainsList={fromChainsList}
         swap={swap}
       />
-      <div id="swap-chains" className="self-center text-fc">
-        <div
-          className="flex justify-center items-center rounded-lg border-2 border-bgLight bg-pr h-7 hover:cursor-pointer hover:bg-bgLight"
-          onClick={() => {
-            setInputTokenDetails({ address: "", icon: "", symbol: "", decimals: 0 })
-            setOutputTokenDetails({ address: "", icon: "", symbol: "", decimals: 0 })
-            swap();
-          }}
-        >
-          <RightArrowSvg className="h-3 w-3" />
+      {widgetWidth > 450 &&
+        <div id="swap-chains" className="self-center text-fc">
+          <div
+            className="flex justify-center items-center rounded-lg border-2 border-bgLight bg-pr h-7 hover:cursor-pointer hover:bg-bgLight"
+            onClick={() => {
+              setInputTokenDetails({ address: "", icon: "", symbol: "", decimals: 0 })
+              setOutputTokenDetails({ address: "", icon: "", symbol: "", decimals: 0 })
+              swap();
+            }}
+          >
+            <RightArrowSvg className="h-3 w-3" />
+          </div>
         </div>
-      </div>
+      }
       <OutputChainSelect
         chainsByChainId={chainsByChainId}
         toChainsList={toChainsList}
