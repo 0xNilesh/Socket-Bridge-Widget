@@ -91,7 +91,6 @@ export default Widget;
 
 /*
   Select Gas Component - Confused
-  Get provider from user - Sunday
   Add themes - Tuesday
   Make responsible acc to width - Sunday
   Transfer Button and methods - Monday

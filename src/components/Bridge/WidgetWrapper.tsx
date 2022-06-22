@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { getBridgeDataByBridgeName, updateTokenList } from "../../helpers";
+import { useBoxWidth } from "../../hooks";
 import { getFromTokenList, getSupportedBridges, getToTokenList } from "../../services";
 import { ChainIdContent, InputTokenAmountContent, queryResponseObj, RoutesContent, SortTypeContent, TabIndexContent, TokenDetailsContent } from "../../types";
 import GasSelector from "./GasSelector";
@@ -56,6 +57,7 @@ let outputTokenList: any;
 
 const WidgetWrapper = () => {
   const widgetProps = useContext(PropsContext);
+  const ref = useRef(null);
 
   // const gasPrice = useQuery(
   //   ["gasPrice"],
@@ -82,6 +84,7 @@ const WidgetWrapper = () => {
   const [selectedRoute, setSelectedRoute] = useState({});
   const [sortType, setSortType] = useState("output" as any);
   const { account } = useContext(useWeb3Context);
+  const width = useBoxWidth(ref);
 
   const fromTokenList: queryResponseObj = useQuery(
     ["fromTokenList", inputChainId],
@@ -138,7 +141,11 @@ const WidgetWrapper = () => {
               <TokenDetailsContext.Provider value={{ inputTokenDetails, setInputTokenDetails, outputTokenDetails, setOutputTokenDetails }}>
                 <RoutesContext.Provider value={{ selectedRoute, routes, setRoutes, setSelectedRoute }}>
                   <SortTypeContext.Provider value={{ sortType, setSortType }}>
-                    <div style={{width: '528px', marginTop: "50px"}} className="rounded-xl bg-pr ml-32 p-6">
+                    <div
+                      style={{ width: '100%', marginTop: "50px" }}
+                      className="rounded-xl bg-pr p-6"
+                      ref={ref}
+                    >
                       {tabIndex === 0 && <MainComponent />}
                       {tabIndex === 1 && <RouteSelector />}
                       {tabIndex === 2 && <GasSelector />}
