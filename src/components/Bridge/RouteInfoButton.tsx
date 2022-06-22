@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { BridgesContext, TokenDetailsContext, WidgetWidthContext } from "./WidgetWrapper";
+import { BridgesContext, TokenDetailsContext, WidgetWidthContext } from "../../contexts";
 
 type Props = {
   route: any;

@@ -1,60 +1,13 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
+import { BridgesContext, ChainIdContext, InputTokenAmountContext, PropsContext, RoutesContext, SortTypeContext, TabIndexContext, TokenDetailsContext, useWeb3Context, WidgetWidthContext } from "../../contexts";
 import { getBridgeDataByBridgeName, updateTokenList } from "../../helpers";
 import { useBoxWidth } from "../../hooks";
 import { getFromTokenList, getSupportedBridges, getToTokenList } from "../../services";
-import { ChainIdContent, InputTokenAmountContent, queryResponseObj, RoutesContent, SortTypeContent, TabIndexContent, TokenDetailsContent } from "../../types";
-import GasSelector from "./GasSelector";
+import { queryResponseObj } from "../../types";
+import BridgeTokens from "./BridgeTokens";
 import MainComponent from "./MainComponent";
 import RouteSelector from "./RouteSelector";
-
-import { PropsContext, useWeb3Context } from "./Widget";
-
-export const TabIndexContext = createContext<TabIndexContent>({
-  tabIndex: 0,
-  setTabIndex: () => {}
-});
-
-export const ChainIdContext = createContext<ChainIdContent>({
-  inputChainId: 1,
-  outputChainId: 137,
-  setInputChainId: () => {},
-  setOutputChainId: () => {}
-});
-
-export const TokenDetailsContext = createContext<TokenDetailsContent>({
-  inputTokenDetails: { address: "", symbol: "", icon: "", decimals: 0 },
-  outputTokenDetails: { address: "", symbol: "", icon: "", decimals: 0 },
-  setInputTokenDetails: () => { },
-  setOutputTokenDetails: () => { }
-});
-
-export const InputTokenAmountContext = createContext<InputTokenAmountContent>({
-  inputTokenAmount: "",
-  setInputTokenAmount: () => { },
-  inputTokenList: {},
-  outputTokenList: {}
-});
-
-export const RoutesContext = createContext<RoutesContent>({
-  selectedRoute: {} as any,
-  routes: [],
-  setRoutes: (routes: []) => { },
-  setSelectedRoute: (routes: any) => { }
-});
-
-export const BridgesContext = createContext({
-  bridgesByName: {} as any
-});
-
-export const SortTypeContext = createContext<SortTypeContent>({
-  sortType: "output",
-  setSortType: () => {}
-});
-
-export const WidgetWidthContext = createContext({
-  widgetWidth: 0
-});
 
 let inputTokenList: any;
 let outputTokenList: any;
@@ -90,7 +43,7 @@ const WidgetWrapper = () => {
   const { account } = useContext(useWeb3Context);
   const widgetWidth = useBoxWidth(ref);
 
-  console.log(widgetWidth);
+  // console.log(widgetWidth);
 
   const fromTokenList: queryResponseObj = useQuery(
     ["fromTokenList", inputChainId],
@@ -155,7 +108,7 @@ const WidgetWrapper = () => {
                       >
                         {tabIndex === 0 && <MainComponent />}
                         {tabIndex === 1 && <RouteSelector />}
-                        {tabIndex === 2 && <GasSelector />}
+                        {tabIndex === 2 && <BridgeTokens />}
                       </div>
                     </WidgetWidthContext.Provider>
                   </SortTypeContext.Provider>
@@ -169,4 +122,4 @@ const WidgetWrapper = () => {
   );
 }
 
-export default React.memo(WidgetWrapper);
+export default WidgetWrapper;

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { SortTypeContext, WidgetWidthContext } from "./WidgetWrapper";
+import { SortTypeContext, WidgetWidthContext } from "../../contexts";
 
 const BridgeTypeSort: React.FC = () => {
   const { widgetWidth } = useContext(WidgetWidthContext);

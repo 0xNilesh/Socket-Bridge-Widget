@@ -1,17 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
+import { BridgesContext, InputTokenAmountContext, InputTokenBalanceContext, RoutesContext, TabIndexContext, useWeb3Context } from "../../contexts";
 import { isValidInput } from "../../helpers";
-import useWeb3 from "../../hooks/useWeb3";
+import { PrimaryButton } from "../Button";
 import BridgeTypeSort from "./BridgeTypeSort";
 import ChainsSelect from "./ChainsSelect";
 import TokensSelect from "./TokensSelect";
-import { BridgesContext, InputTokenAmountContext, RoutesContext, TabIndexContext } from "./WidgetWrapper";
 
 const MainComponent: React.FC = () => {
   const { selectedRoute } = useContext(RoutesContext);
   const { bridgesByName } = useContext(BridgesContext);
   const { setTabIndex } = useContext(TabIndexContext);
+  const { account } = useContext(useWeb3Context);
   const { inputTokenAmount } = useContext(InputTokenAmountContext);
   const [bridgeFee, setBridgeFee] = useState("");
+  const [inputTokenBalance, setInputTokenBalance] = useState("");
 
   let isValid = Object.keys(selectedRoute).length === 0 || inputTokenAmount === "" || !isValidInput.test(inputTokenAmount);
 
@@ -47,7 +49,9 @@ const MainComponent: React.FC = () => {
         <div className="h-5"></div>
         <ChainsSelect />
         <div className="h-3"></div>
-        <TokensSelect />
+        <InputTokenBalanceContext.Provider value={{inputTokenBalance, setInputTokenBalance}}>
+          <TokensSelect />
+        </InputTokenBalanceContext.Provider>
         <div className="h-3"></div>
         <div className="h-3"></div>
         <div className="flex flex-col text-fc text-sm font-normal">
@@ -98,6 +102,27 @@ const MainComponent: React.FC = () => {
                 : <div>~ ${ (selectedRoute.totalGasFeesInUsd).toFixed(2).toString() }</div>
             }
           </div>
+        </div>
+        <div className="h-3"></div>
+        <div className="h-3"></div>
+        <div className="h-3"></div>
+        <div>
+          <PrimaryButton
+            buttonText={`
+              ${!account ? 'Connect Wallet' :
+              (parseFloat(inputTokenBalance) < parseFloat(inputTokenAmount)) ? 'Not enough balance' :
+                Object.keys(selectedRoute).length === 0 ? 'Select Route' :
+                'Proceed'
+              }
+            `}
+            bgColor="#e4147c"
+            disabled={
+              !account ||
+              (parseFloat(inputTokenBalance) < parseFloat(inputTokenAmount)) ||
+              Object.keys(selectedRoute).length === 0
+            }
+            onClick={() => setTabIndex(2)}
+          />
         </div>
       </div>  
     </>

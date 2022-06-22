@@ -6,13 +6,13 @@ type Props = {
   width?: string;
   textColor?: string;
   disabled?: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const PrimaryButton: React.FC<Props> = ({ buttonText, bgColor, width = "100%", textColor = "#fff", disabled = false, onClick }: Props) => {
   return (
     <button
-      className="px-4 py-4 rounded-lg disabled:opacity-50"
+      className="px-4 py-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
       style={{backgroundColor: bgColor, width: width}}
       disabled={disabled}
       onClick={onClick}

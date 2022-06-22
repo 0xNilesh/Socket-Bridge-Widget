@@ -3,7 +3,7 @@ import { useClickAway } from "../../hooks";
 import { useQuery } from "react-query";
 import { getIfTokenSupported, getUserTokenBalances } from "../../services";
 import { ethers } from "ethers";
-import { useWeb3Context } from "../Bridge/Widget";
+import { useWeb3Context } from "../../contexts";
   
 interface TokenDetail {
   address: string,
@@ -167,7 +167,7 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
                   <div>{option.symbol}</div>
                   <div className="text-bg3 text-sm">{option.name}</div>
                 </div>
-                <div>{tokenBalance[option.address] ? tokenBalance[option.address].toPrecision(3) : "0.00"}</div>
+                <div>{tokenBalance[option.address] ? tokenBalance[option.address].toFixed(3) : "0.00"}</div>
               </div>
             );
           })}

@@ -1,25 +1,12 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import WidgetWrapper from "./WidgetWrapper";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Web3Provider } from '@ethersproject/providers';
 import { Theme } from "../../config";
-import { PropsContent, useWeb3ProviderContent } from "../../types";
 import { useWeb3 } from "../../hooks";
+import { PropsContext, useWeb3Context } from "../../contexts";
 
 const queryClient = new QueryClient();
-
-export const PropsContext = createContext<PropsContent>({
-  width: "100%",
-  defaultInputChainId: 1,
-  defaultOutputChainId: 137
-});
-
-export const useWeb3Context = createContext<useWeb3ProviderContent>({
-  account: "",
-  chainId: 0,
-  signer: {},
-  w3Provider: {}
-});
 
 export interface WidgetProps {
   apiKey: string;
@@ -92,7 +79,6 @@ export default Widget;
 /*
   Select Gas Component - Confused
   Add themes - Tuesday
-  Make responsible acc to width - Sunday
   Transfer Button and methods - Monday
   Final Progress Component - Monday
   Readme - Tuesday

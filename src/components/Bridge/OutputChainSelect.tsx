@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { ChainDetail } from "../../types";
 import { ChainSelectDropdown } from "../Dropdown";
-import { ChainIdContext, TokenDetailsContext } from "./WidgetWrapper";
+import { ChainIdContext, TokenDetailsContext } from "../../contexts";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 
 interface Props {

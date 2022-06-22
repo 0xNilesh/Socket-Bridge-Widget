@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import { getSupportedChains } from "../../services";
-import { ChainIdContext, TokenDetailsContext, WidgetWidthContext } from "./WidgetWrapper";
+import { ChainIdContext, TokenDetailsContext, WidgetWidthContext } from "../../contexts";
 import RightArrowSvg from "../../assets/right-arrow.svg";
 import InputChainSelect from "./InputChainSelect";
 import OutputChainSelect from "./OutputChainSelect";

@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { ChainIdContext, InputTokenAmountContext, RoutesContext, SortTypeContext, TokenDetailsContext } from "./WidgetWrapper";
+import { ChainIdContext, InputTokenAmountContext, RoutesContext, SortTypeContext, TokenDetailsContext, useWeb3Context } from "../../contexts";
 import { TokenSelectDropdown } from "../Dropdown";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 import { queryResponseObj } from "../../types";
@@ -9,7 +9,6 @@ import { isValidInput } from "../../helpers";
 
 import debounce from "lodash.debounce";
 import { useIsMount } from "../../hooks";
-import { useWeb3Context } from "./Widget";
 let DEBOUNCE_TIMEOUT = 1500;
 
 let price: any;
@@ -105,7 +104,7 @@ const OutputTokenSelect: React.FC = () => {
       <div className="flex flex-row">
         <div className="text-bg3 text-xs mr-2">Receive</div>
         <div className="grow text-bg3 text-xs text-right font-medium">
-          {price && Object.keys(selectedRoute).length !== 0 && inputTokenAmount != "" &&
+          {price && Object.keys(selectedRoute).length !== 0 && inputTokenAmount != "" && !quoteList.isLoading &&
             <>
               <input
                 disabled

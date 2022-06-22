@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { RoutesContext, TabIndexContext, TokenDetailsContext, WidgetWidthContext } from "./WidgetWrapper";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 import RouteInfoButton from "./RouteInfoButton";
 import { PrimaryButton } from "../Button";
+import { RoutesContext, TabIndexContext, TokenDetailsContext, WidgetWidthContext } from "../../contexts";
 
 const RouteSelector: React.FC = () => {
   const { setTabIndex } = useContext(TabIndexContext);

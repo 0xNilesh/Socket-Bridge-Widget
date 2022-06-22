@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { ChainIdContext, InputTokenAmountContext, TokenDetailsContext } from "./WidgetWrapper";
+import { ChainIdContext, InputTokenAmountContext, TokenDetailsContext } from "../../contexts";
 import { TokenSelectDropdown } from "../Dropdown";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 import { queryResponseObj } from "../../types";
