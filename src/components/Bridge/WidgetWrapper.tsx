@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
-import { BridgesContext, ChainIdContext, InputTokenAmountContext, PropsContext, RoutesContext, SortTypeContext, TabIndexContext, TokenDetailsContext, useWeb3Context, WidgetWidthContext } from "../../contexts";
-import { getBridgeDataByBridgeName, updateTokenList } from "../../helpers";
+import { BridgesContext, ChainIdContext, ChainsContext, InputTokenAmountContext, PropsContext, RoutesContext, SortTypeContext, TabIndexContext, TokenDetailsContext, useWeb3Context, WidgetWidthContext } from "../../contexts";
+import { getBridgeDataByBridgeName, getChainDataByChainId, updateTokenList } from "../../helpers";
 import { useBoxWidth } from "../../hooks";
-import { getFromTokenList, getSupportedBridges, getToTokenList } from "../../services";
+import { getFromTokenList, getSupportedBridges, getSupportedChains, getToTokenList } from "../../services";
 import { queryResponseObj } from "../../types";
 import BridgeTokens from "./BridgeTokens";
 import MainComponent from "./MainComponent";
@@ -26,7 +26,10 @@ const WidgetWrapper = () => {
   // );
 
   const bridgesResponse = useQuery(["bridges"], getSupportedBridges);
-  const [ bridgesByName ] = getBridgeDataByBridgeName(bridgesResponse);
+  const [bridgesByName] = getBridgeDataByBridgeName(bridgesResponse);
+  
+  const chainsResponse = useQuery(["chains"], getSupportedChains);
+  const [chainsByChainId, fromChainsList, toChainsList] = getChainDataByChainId(chainsResponse);
 
   // if (gasPrice.isLoading) console.log("Loading...gasPrice");
   // else console.log('gasPrice', gasPrice.data);
@@ -95,27 +98,29 @@ const WidgetWrapper = () => {
     <>
       <TabIndexContext.Provider value={{ tabIndex, setTabIndex }}>
         <BridgesContext.Provider value={{ bridgesByName }}>
-          <ChainIdContext.Provider value={{ inputChainId, setInputChainId, outputChainId, setOutputChainId }}>
-            <InputTokenAmountContext.Provider value={{ inputTokenAmount, setInputTokenAmount, inputTokenList, outputTokenList }}>
-              <TokenDetailsContext.Provider value={{ inputTokenDetails, setInputTokenDetails, outputTokenDetails, setOutputTokenDetails }}>
-                <RoutesContext.Provider value={{ selectedRoute, routes, setRoutes, setSelectedRoute }}>
-                  <SortTypeContext.Provider value={{ sortType, setSortType }}>
-                    <WidgetWidthContext.Provider value={{widgetWidth}}>
-                      <div
-                        style={{ width: '100%', marginTop: "50px" }}
-                        className="rounded-xl bg-pr p-6"
-                        ref={ref}
-                      >
-                        {tabIndex === 0 && <MainComponent />}
-                        {tabIndex === 1 && <RouteSelector />}
-                        {tabIndex === 2 && <BridgeTokens />}
-                      </div>
-                    </WidgetWidthContext.Provider>
-                  </SortTypeContext.Provider>
-                </RoutesContext.Provider>
-              </TokenDetailsContext.Provider>
-            </InputTokenAmountContext.Provider>
-          </ChainIdContext.Provider>
+          <ChainsContext.Provider value={{ chainsByChainId, fromChainsList, toChainsList }}>
+            <ChainIdContext.Provider value={{ inputChainId, setInputChainId, outputChainId, setOutputChainId }}>
+              <InputTokenAmountContext.Provider value={{ inputTokenAmount, setInputTokenAmount, inputTokenList, outputTokenList }}>
+                <TokenDetailsContext.Provider value={{ inputTokenDetails, setInputTokenDetails, outputTokenDetails, setOutputTokenDetails }}>
+                  <RoutesContext.Provider value={{ selectedRoute, routes, setRoutes, setSelectedRoute }}>
+                    <SortTypeContext.Provider value={{ sortType, setSortType }}>
+                      <WidgetWidthContext.Provider value={{widgetWidth}}>
+                        <div
+                          style={{ width: '100%', marginTop: "50px" }}
+                          className="rounded-xl bg-pr p-6"
+                          ref={ref}
+                        >
+                          {tabIndex === 0 && <MainComponent />}
+                          {tabIndex === 1 && <RouteSelector />}
+                          {tabIndex === 2 && <BridgeTokens />}
+                        </div>
+                      </WidgetWidthContext.Provider>
+                    </SortTypeContext.Provider>
+                  </RoutesContext.Provider>
+                </TokenDetailsContext.Provider>
+              </InputTokenAmountContext.Provider>
+            </ChainIdContext.Provider>
+          </ChainsContext.Provider>
         </BridgesContext.Provider>
       </TabIndexContext.Provider>
     </>

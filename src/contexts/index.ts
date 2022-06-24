@@ -38,6 +38,12 @@ export const BridgesContext = createContext({
   bridgesByName: {} as any
 });
 
+export const ChainsContext = createContext({
+  chainsByChainId: {} as any,
+  fromChainsList: [] as any,
+  toChainsList: [] as any
+});
+
 export const SortTypeContext = createContext<SortTypeContent>({
   sortType: "output",
   setSortType: () => {}

@@ -57,12 +57,14 @@ const OutputTokenSelect: React.FC = () => {
           }
         )
       }, {
-      enabled: !!(account && account != "" && inputTokenDetails.address && outputTokenDetails.address && isValidInput.test(inputTokenAmount) && fetchRoute === true && inputTokenAmount != "")
+        enabled: !!(account && account != "" && inputTokenDetails.address && outputTokenDetails.address && isValidInput.test(inputTokenAmount) && fetchRoute === true && inputTokenAmount != ""),
+        cacheTime: 0
     }
   );
 
   useEffect(() => {
     if (isMount) return;
+    console.log(" called now", quoteList);
     if (quoteList.isSuccess) {
       const response: any = quoteList.data?.data?.result;
       if (response?.routes.length) {

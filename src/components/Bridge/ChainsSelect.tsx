@@ -1,20 +1,15 @@
 import React, { useContext } from "react";
-import { useQuery } from "react-query";
-import { getSupportedChains } from "../../services";
-import { ChainIdContext, TokenDetailsContext, WidgetWidthContext } from "../../contexts";
+import { ChainIdContext, ChainsContext, TokenDetailsContext, WidgetWidthContext } from "../../contexts";
 import RightArrowSvg from "../../assets/right-arrow.svg";
 import InputChainSelect from "./InputChainSelect";
 import OutputChainSelect from "./OutputChainSelect";
-import { getChainDataByChainId } from "../../helpers";
 
 const ChainsSelect: React.FC = () => {
-  const chainsResponse = useQuery(["chains"], getSupportedChains);
-
   const { inputChainId, outputChainId, setInputChainId, setOutputChainId } = useContext(ChainIdContext);
   const { setInputTokenDetails, setOutputTokenDetails } = useContext(TokenDetailsContext);
   const { widgetWidth } = useContext(WidgetWidthContext);
 
-  const [chainsByChainId, fromChainsList, toChainsList] = getChainDataByChainId(chainsResponse);
+  const {chainsByChainId, fromChainsList, toChainsList} = useContext(ChainsContext);
 
   const swap = () => {
     if (
