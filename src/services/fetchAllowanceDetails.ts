@@ -3,7 +3,7 @@ import { RequestProps, getReq } from "../api";
 type Props = {
   chainId: string;
   owner: string;
-  allowanceTarget: string;
+  allowanceTarget: any;
   tokenAddress: string;
 }
 

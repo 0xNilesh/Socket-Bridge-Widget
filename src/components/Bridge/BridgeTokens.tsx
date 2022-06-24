@@ -1,12 +1,15 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import DownArrowSvg from "../../assets/down-arrow.svg";
-import { BridgesContext, ChainIdContext, ChainsContext, RoutesContext, TabIndexContext, TokenDetailsContext } from "../../contexts";
-import { getRouteTransactionData } from "../../services";
+import { BridgesContext, ChainIdContext, ChainsContext, RoutesContext, TabIndexContext, TokenDetailsContext, useWeb3Context } from "../../contexts";
+import { getAllowanceDetail, getRouteTransactionData } from "../../services";
 
 import { queryResponseObj } from "../../types";
+import { PrimaryButton } from "../Button";
+let allowanceAmount: queryResponseObj;
 
 const BridgeTokens = () => {
+  const { account } = useContext(useWeb3Context);
   const { setTabIndex } = useContext(TabIndexContext);
   const { selectedRoute } = useContext(RoutesContext);
   const { bridgesByName } = useContext(BridgesContext);
@@ -15,6 +18,14 @@ const BridgeTokens = () => {
   const { inputTokenDetails, outputTokenDetails } = useContext(TokenDetailsContext);
   const [btn, setBtn] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [allowanceTarget, setAllowanceTarget] = useState(null);
+  const [minimumApprovalAmount, setMinimumApprovalAmount] = useState(null);
+  const [approveBtnText, setApproveBtnText] = useState("Approve");
+  const [bridgeBtnText, setBridgeBtnText] = useState("Bridge");
+  const [hideApproveBtn, setHideApproveBtn] = useState(true);
+  const [hideBridgeBtn, setHideBridgeBtn] = useState(true);
+  const [disabledApproveBtn, setDisabledApproveBtn] = useState(false);
+  const [disabledBridgeBtn, setDisabledBridgeBtn] = useState(false);
 
   const isFirstMount = useRef(true);
 
@@ -22,15 +33,46 @@ const BridgeTokens = () => {
   const outputAmountSimplified = (parseFloat(selectedRoute.toAmount) / (10 ** outputTokenDetails.decimals)).toFixed(2).toString() + " " + outputTokenDetails.symbol;
   const bridgeName = bridgesByName[selectedRoute.usedBridgeNames[0]].displayName;
 
+  allowanceAmount = useQuery(["checkAllowance"],
+    () => getAllowanceDetail({
+      chainId: inputChainId.toString(),
+      owner: account,
+      allowanceTarget: allowanceTarget,
+      tokenAddress: inputTokenDetails.address
+    }), {
+      enabled: !!(allowanceTarget !== null)
+    }
+  );
+
   const routeTxData = useMutation(["routeTxData"],
       getRouteTransactionData, {
         onSuccess: (data: any) => {
           setLoading(false);
           const { allowanceTarget, minimumApprovalAmount } = data.data.result.approvalData;
           console.log(allowanceTarget, minimumApprovalAmount);
+          setMinimumApprovalAmount(minimumApprovalAmount);
+          if (allowanceTarget === null) {
+            setHideBridgeBtn(false);
+          } else {
+            setAllowanceTarget(allowanceTarget);
+          }
       },
     }
   );
+
+  useEffect(() => {
+    if (allowanceAmount.isSuccess) {
+      const allowanceValue = parseInt(allowanceAmount.data?.data?.result?.value);
+      if (minimumApprovalAmount != null && parseInt(minimumApprovalAmount) > allowanceValue) {
+        setDisabledBridgeBtn(true);
+        setHideApproveBtn(false);
+        setHideBridgeBtn(false);
+      } else if(minimumApprovalAmount != null && parseInt(minimumApprovalAmount) <= allowanceValue) {
+        setHideBridgeBtn(false);
+      }
+      console.log(allowanceValue);
+    }
+  }, [allowanceAmount.isSuccess]);
 
   // run this effect on only first mount of this component
   useEffect(() => {
@@ -57,7 +99,23 @@ const BridgeTokens = () => {
       <div className="h-4"></div>
       <div className="text-fc text-base font-medium">Bridge Info</div>
       <div className="text-bg3 test-xs font-normal py-1">{inputAmountSimplified} on {chainsByChainId[inputChainId]["name"]} to {outputAmountSimplified} on {chainsByChainId[outputChainId]["name"]} via {bridgeName} bridge</div>
-      {loading && <div className="text-fc text-base font-medium mt-4 mb-4">Loading</div>}
+      {loading && hideApproveBtn && hideBridgeBtn && <div className="text-fc text-base font-medium mt-4 mb-4">Loading</div>}
+      {!hideApproveBtn &&
+        <PrimaryButton
+          buttonText={approveBtnText}
+          bgColor="#e4147c"
+          disabled={disabledApproveBtn}
+          onClick={() => {}}
+        />
+      }
+      {!hideBridgeBtn &&
+        <PrimaryButton
+          buttonText={bridgeBtnText}
+          bgColor="#e4147c"
+          disabled={disabledBridgeBtn}
+          onClick={() => {}}
+        />
+      }
       <button onClick={() => setBtn(btn + 1)} className="text-fc">{btn}</button>
     </div>
   );
