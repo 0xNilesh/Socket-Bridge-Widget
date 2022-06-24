@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { BridgesContext, InputTokenAmountContext, InputTokenBalanceContext, RoutesContext, TabIndexContext, useWeb3Context } from "../../contexts";
+import { BridgesContext, ChainIdContext, ChainsContext, InputTokenAmountContext, InputTokenBalanceContext, RoutesContext, TabIndexContext, useWeb3Context } from "../../contexts";
 import { isValidInput } from "../../helpers";
 import { PrimaryButton } from "../Button";
 import BridgeTypeSort from "./BridgeTypeSort";
@@ -9,8 +9,10 @@ import TokensSelect from "./TokensSelect";
 const MainComponent: React.FC = () => {
   const { selectedRoute } = useContext(RoutesContext);
   const { bridgesByName } = useContext(BridgesContext);
+  const { inputChainId } = useContext(ChainIdContext);
+  const { chainsByChainId } = useContext(ChainsContext);
   const { setTabIndex } = useContext(TabIndexContext);
-  const { account } = useContext(useWeb3Context);
+  const { account, chainId } = useContext(useWeb3Context);
   const { inputTokenAmount } = useContext(InputTokenAmountContext);
   const [bridgeFee, setBridgeFee] = useState("");
   const [inputTokenBalance, setInputTokenBalance] = useState("");
@@ -112,6 +114,7 @@ const MainComponent: React.FC = () => {
               ${!account ? 'Connect Wallet' :
               (parseFloat(inputTokenBalance) < parseFloat(inputTokenAmount)) ? 'Not enough balance' :
                 Object.keys(selectedRoute).length === 0 ? 'Select Route' :
+                chainId !== inputChainId ? `Switch to ${chainsByChainId[inputChainId]["name"]} Network` :
                 'Proceed'
               }
             `}
@@ -119,7 +122,8 @@ const MainComponent: React.FC = () => {
             disabled={
               !account ||
               (parseFloat(inputTokenBalance) < parseFloat(inputTokenAmount)) ||
-              Object.keys(selectedRoute).length === 0
+              Object.keys(selectedRoute).length === 0 ||
+              chainId !== inputChainId
             }
             onClick={() => setTabIndex(2)}
           />
