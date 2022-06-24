@@ -79,7 +79,7 @@ const WidgetWrapper = () => {
     if (fromTokenList.isSuccess) {
       inputTokenList = fromTokenList.data?.data?.result;
       const { address, icon, symbol, decimals } = inputTokenList.filter((token: any) => (token.symbol === 'USDC'))[0];
-      console.log(address, icon, symbol);
+      // console.log(address, icon, symbol);
       setInputTokenDetails({ address, icon, symbol, decimals });
       inputTokenList = updateTokenList(inputChainId, inputTokenList, account);
     }

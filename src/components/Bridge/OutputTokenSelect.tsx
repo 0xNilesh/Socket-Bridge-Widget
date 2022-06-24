@@ -64,7 +64,7 @@ const OutputTokenSelect: React.FC = () => {
 
   useEffect(() => {
     if (isMount) return;
-    console.log(" called now", quoteList);
+    // console.log(" called now", quoteList);
     if (quoteList.isSuccess) {
       const response: any = quoteList.data?.data?.result;
       if (response?.routes.length) {
@@ -88,7 +88,7 @@ const OutputTokenSelect: React.FC = () => {
   // debounce to reduce API calls while typing
   useEffect(() => {
     if (isMount) return;
-    console.log("hello debounce");
+    // console.log("hello debounce");
     if (!isValidInput.test(inputTokenAmount) || inputTokenAmount == "") {
       return;
     }

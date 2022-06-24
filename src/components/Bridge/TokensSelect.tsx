@@ -43,7 +43,7 @@ const TokensSelect: React.FC = () => {
           <>
             <div className="mt-1">
               <div className="text-bg3 text-sm">
-                {<>{inputTokenBalance} {inputTokenDetails.symbol}</>}
+                Balance: {<>{inputTokenBalance} {inputTokenDetails.symbol}</>}
               </div>    
             </div>
           </>

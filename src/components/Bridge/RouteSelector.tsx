@@ -25,7 +25,7 @@ const RouteSelector: React.FC = () => {
     setTabIndex(0);
   }
 
-  console.log(selectedRoute);
+  // console.log(selectedRoute);
 
   return (
     <div>

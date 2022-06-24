@@ -17,7 +17,7 @@ const MainComponent: React.FC = () => {
 
   let isValid = Object.keys(selectedRoute).length === 0 || inputTokenAmount === "" || !isValidInput.test(inputTokenAmount);
 
-  console.log("hello", selectedRoute);
+  // console.log("hello", selectedRoute);
 
   useEffect(() => {
     if (Object.keys(selectedRoute).length === 0) return;

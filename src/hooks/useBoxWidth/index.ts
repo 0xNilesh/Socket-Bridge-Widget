@@ -10,7 +10,6 @@ const useBoxWidth = (ref:any) => {
       if (!ref || !ref.current) {
           return;
       }
-      console.log(ref, ref.current, ref.current?.offsetWidth);
       setWidth(ref.current?.offsetWidth);
     }
 

@@ -5,8 +5,10 @@ const useIsMount = () => {
   const isMountRef = useRef(true);
 
   useEffect(() => {
-    isMountRef.current = false;
-  }, []);
+    if (isMountRef.current) {
+      isMountRef.current = false;
+    }
+  }, [isMountRef]);
 
   return isMountRef.current;
 };
