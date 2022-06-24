@@ -1,4 +1,5 @@
 export { default as getAllowanceDetail } from "./fetchAllowanceDetails";
+export { default as getApprovalTxData } from "./fetchApprovalTxData";
 export { default as getFromTokenList } from "./fetchFromTokenList";
 export { default as getGasPriceByChainId } from "./fetchGasPriceByChainId";
 export { default as getIfTokenSupported } from "./fetchIfTokenSupported";
