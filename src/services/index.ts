@@ -8,3 +8,4 @@ export { default as getTokenBalanceByTokenAddress } from "./fetchTokenBalanceByT
 export { default as getTokenPriceByTokenAddress } from "./fetchTokenPriceByTokenAddress";
 export { default as getToTokenList } from "./fetchToTokenList";
 export { default as getUserTokenBalances } from "./fetchUserTokenBalances";
+export { default as getRouteTransactionData } from "./getRouteTransactionData";
