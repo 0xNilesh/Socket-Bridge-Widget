@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { useQuery } from "react-query";
 import { ChainIdContext, InputTokenBalanceContext, TokenDetailsContext, useWeb3Context } from "../../contexts";
 import { getTokenBalanceByTokenAddress } from "../../services";
+import LoadingSvg from "../../assets/loading.svg";
 import { queryResponseObj } from "../../types";
 import InputTokenSelect from "./InputTokenSelect";
 import OutputTokenSelect from "./OutputTokenSelect";
@@ -43,7 +44,7 @@ const TokensSelect: React.FC = () => {
           <>
             <div className="mt-1">
               <div className="text-bg3 text-sm">
-                Balance: {<>{inputTokenBalance} {inputTokenDetails.symbol}</>}
+                Balance: {tokenBalance.isLoading ? <LoadingSvg className="inline animate-spin ml-1 mr-1 h-5 w-5 text-fc text-xs" />: <>{inputTokenBalance}</>} {inputTokenDetails.symbol !== "" && <>{inputTokenDetails.symbol}</>}
               </div>    
             </div>
           </>

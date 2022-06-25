@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { ChainIdContext, InputTokenAmountContext, TokenDetailsContext } from "../../contexts";
 import { TokenSelectDropdown } from "../Dropdown";
 import DownArrowSvg from "../../assets/down-arrow.svg";
+import LoadingSvg from "../../assets/loading.svg";
 import { queryResponseObj } from "../../types";
 import { useQuery } from "react-query";
 import { getTokenPriceByTokenAddress } from "../../services";
@@ -59,7 +60,7 @@ const InputTokenSelect: React.FC = () => {
           {(inputTokenDetails.address === "") &&
             <>
               {/* <img src={chainsByChainId[inputChainId].currency.icon} className="w-4 h-4 rounded-full mr-1 self-center" /> */}
-              <div className="mr-2">Loading...</div>
+              <div className="mr-2"><LoadingSvg className="inline animate-spin -ml-1 mr-2 h-5 w-5 text-fc" /> Loading...</div>
               <div className="self-center">
                 <DownArrowSvg className="rotate-90 mr-1" style={{width: 6, height: 10}} />
               </div>

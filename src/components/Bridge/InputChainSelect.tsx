@@ -3,6 +3,7 @@ import { ChainDetail } from "../../types";
 import { ChainSelectDropdown } from "../Dropdown";
 import { ChainIdContext, TokenDetailsContext } from "../../contexts";
 import DownArrowSvg from "../../assets/down-arrow.svg";
+import LoadingSvg from "../../assets/loading.svg";
 
 type Props = {
   chainsByChainId: any
@@ -25,10 +26,15 @@ const InputChainSelect: React.FC<Props> = ({ chainsByChainId, fromChainsList, sw
           onClick={() => setHideInputChainDropdown(!hideInputChainDropdown)}
         >
           <div className="text-base font-medium">
-            {chainsByChainId &&
+            {chainsByChainId
+              ?
               <div className="flex flex-row items-center">
                 <img src={chainsByChainId[inputChainId].icon} className="w-4 h-4 rounded-md mr-1" />
                 <div>{chainsByChainId[inputChainId].name}</div>
+              </div>
+              :
+              <div>
+                <LoadingSvg className="inline animate-spin -ml-1 mr-2 h-5 w-5 text-fc" /> Loading...
               </div>
             }
           </div>

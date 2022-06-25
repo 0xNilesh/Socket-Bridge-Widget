@@ -1,10 +1,21 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { BridgesContext, ChainIdContext, ChainsContext, InputTokenAmountContext, InputTokenBalanceContext, RoutesContext, TabIndexContext, useWeb3Context } from "../../contexts";
 import { isValidInput } from "../../helpers";
 import { PrimaryButton } from "../Button";
 import BridgeTypeSort from "./BridgeTypeSort";
 import ChainsSelect from "./ChainsSelect";
 import TokensSelect from "./TokensSelect";
+import LoadingSvg from "../../assets/loading.svg";
+
+export const RouteLoadingContext = createContext({
+  routeLoading: false,
+  setRouteLoading: (value: boolean) => { }
+});
+
+export const WarningMsgContext = createContext({
+  warningMsg: "",
+  setWarningMsg: (msg: string) => { }
+});
 
 const MainComponent: React.FC = () => {
   const { selectedRoute } = useContext(RoutesContext);
@@ -15,9 +26,14 @@ const MainComponent: React.FC = () => {
   const { account, chainId } = useContext(useWeb3Context);
   const { inputTokenAmount } = useContext(InputTokenAmountContext);
   const [bridgeFee, setBridgeFee] = useState("");
+  const [routeLoading, setRouteLoading] = useState(false);
+  const [warningMsg, setWarningMsg] = useState('');
+
+  console.log(warningMsg);
+  
   const [inputTokenBalance, setInputTokenBalance] = useState("");
 
-  let isValid = Object.keys(selectedRoute).length === 0 || inputTokenAmount === "" || !isValidInput.test(inputTokenAmount);
+  let isNotValid = Object.keys(selectedRoute).length === 0 || inputTokenAmount === "" || !isValidInput.test(inputTokenAmount);
 
   // console.log("hello", selectedRoute);
 
@@ -51,20 +67,28 @@ const MainComponent: React.FC = () => {
         <div className="h-5"></div>
         <ChainsSelect />
         <div className="h-3"></div>
-        <InputTokenBalanceContext.Provider value={{inputTokenBalance, setInputTokenBalance}}>
-          <TokensSelect />
-        </InputTokenBalanceContext.Provider>
+        <RouteLoadingContext.Provider value={{ routeLoading, setRouteLoading }}>
+          <WarningMsgContext.Provider value={{warningMsg, setWarningMsg}}>
+            <InputTokenBalanceContext.Provider value={{inputTokenBalance, setInputTokenBalance}}>
+              <TokensSelect />
+            </InputTokenBalanceContext.Provider>
+          </WarningMsgContext.Provider>
+        </RouteLoadingContext.Provider>
         <div className="h-3"></div>
         <div className="h-3"></div>
         <div className="flex flex-col text-fc text-sm font-normal">
           <div className="flex flex-row justify-between">
             <div>Bridge</div>
             {
-              isValid 
+              isNotValid
                 ?
                 <div>
                   —
                 </div>
+                :
+              routeLoading 
+                ?
+                <LoadingSvg className="inline animate-spin -ml-1 mr-2 h-5 w-5 text-fc" />
                 :
                 <div className="flex flex-row">
                   <img src={bridgesByName[selectedRoute.usedBridgeNames[0]].icon} className="w-5 h-5 rounded-full mr-1 self-center" />
@@ -81,7 +105,7 @@ const MainComponent: React.FC = () => {
           <div className="flex flex-row justify-between">
             <div>Transfer Time</div>
             {
-              isValid 
+              (isNotValid || routeLoading) 
                 ? <div>—</div>
                 : <div>~{ (selectedRoute.serviceTime / 60).toString() } min</div>
             }
@@ -90,7 +114,7 @@ const MainComponent: React.FC = () => {
           <div className="flex flex-row justify-between">
             <div>Bridge Fee</div>
             {
-              isValid 
+              (isNotValid || routeLoading) 
                 ? <div>—</div>
                 : <div>{ bridgeFee }</div>
             }
@@ -99,7 +123,7 @@ const MainComponent: React.FC = () => {
           <div className="flex flex-row justify-between">
             <div>Gas Fee</div>
             {
-              isValid 
+              (isNotValid || routeLoading) 
                 ? <div>—</div>
                 : <div>~ ${ (selectedRoute.totalGasFeesInUsd).toFixed(2).toString() }</div>
             }
@@ -108,12 +132,14 @@ const MainComponent: React.FC = () => {
         <div className="h-3"></div>
         <div className="h-3"></div>
         <div className="h-3"></div>
+        {warningMsg !== '' && <div className="mb-4 text-base font-medium text-orange-500">{warningMsg}</div>}
+        <div className="h-3"></div>
         <div>
           <PrimaryButton
             buttonText={`
               ${!account ? 'Connect Wallet' :
               (parseFloat(inputTokenBalance) < parseFloat(inputTokenAmount)) ? 'Not enough balance' :
-                Object.keys(selectedRoute).length === 0 ? 'Select Route' :
+                (Object.keys(selectedRoute).length === 0 || routeLoading) ? 'Select Route' :
                 chainId !== inputChainId ? `Switch to ${chainsByChainId[inputChainId]["name"]} Network` :
                 'Proceed'
               }
@@ -121,6 +147,7 @@ const MainComponent: React.FC = () => {
             bgColor="#e4147c"
             disabled={
               !account ||
+              routeLoading ||
               (parseFloat(inputTokenBalance) < parseFloat(inputTokenAmount)) ||
               Object.keys(selectedRoute).length === 0 ||
               chainId !== inputChainId

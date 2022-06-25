@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ChainIdContext, InputTokenAmountContext, RoutesContext, SortTypeContext, TokenDetailsContext, useWeb3Context } from "../../contexts";
 import { TokenSelectDropdown } from "../Dropdown";
+import LoadingSvg from "../../assets/loading.svg";
 import DownArrowSvg from "../../assets/down-arrow.svg";
 import { queryResponseObj } from "../../types";
 import { useQuery } from "react-query";
@@ -9,13 +10,16 @@ import { isValidInput } from "../../helpers";
 
 import debounce from "lodash.debounce";
 import { useIsMount } from "../../hooks";
-let DEBOUNCE_TIMEOUT = 1500;
+import { RouteLoadingContext, WarningMsgContext } from "./MainComponent";
+let DEBOUNCE_TIMEOUT = 1000;
 
 let price: any;
 let quoteList: queryResponseObj;
 
 const OutputTokenSelect: React.FC = () => {
   const { account } = useContext(useWeb3Context);
+  const { setRouteLoading } = useContext(RouteLoadingContext);
+  const { setWarningMsg } = useContext(WarningMsgContext);
   const { inputChainId, outputChainId } = useContext(ChainIdContext);
   const { inputTokenDetails, outputTokenDetails, setOutputTokenDetails } = useContext(TokenDetailsContext);
 
@@ -65,6 +69,9 @@ const OutputTokenSelect: React.FC = () => {
   useEffect(() => {
     if (isMount) return;
     // console.log(" called now", quoteList);
+    if (quoteList.isLoading) {
+      setRouteLoading(true);
+    }
     if (quoteList.isSuccess) {
       const response: any = quoteList.data?.data?.result;
       if (response?.routes.length) {
@@ -72,11 +79,17 @@ const OutputTokenSelect: React.FC = () => {
         else setSelectedRoute(response?.routes[response?.routes.length-1]);
         setRoutes(response?.routes);
       } else {
+        console.log("Not found");
+        setWarningMsg('No bridges support this trade. Try bigger amount.');
         setSelectedRoute({});
         setRoutes([]);
+        setInterval(() => {
+          setWarningMsg('');
+        }, 5000);
       }
+      setRouteLoading(false);
     }
-  }, [quoteList.isSuccess, inputTokenDetails.address, outputTokenDetails.address, inputTokenAmount, sortType]);
+  }, [quoteList.isLoading, inputTokenDetails.address, outputTokenDetails.address, inputTokenAmount, sortType]);
 
   const debouncedFetchRouteCall = useCallback(
     debounce(() => {
@@ -125,7 +138,7 @@ const OutputTokenSelect: React.FC = () => {
           {(outputTokenDetails.address === "") &&
             <>
               {/* <img src={chainsByChainId[outputChainId].currency.icon} className="w-4 h-4 rounded-full mr-1 self-center" /> */}
-              <div className="mr-2">Loading...</div>
+              <div className="mr-2"><LoadingSvg className="inline animate-spin -ml-1 mr-2 h-5 w-5 text-fc" /> Loading...</div>
               <div className="self-center">
                 <DownArrowSvg className="rotate-90 mr-1" style={{width: 6, height: 10}} />
               </div>
@@ -147,7 +160,7 @@ const OutputTokenSelect: React.FC = () => {
             disabled
             value={
               quoteList.isLoading
-                ? "Loading..."
+                ? 'Loading...'
                 : (
                     Object.keys(selectedRoute).length === 0 || inputTokenAmount === "" || !isValidInput.test(inputTokenAmount)
                     ? "0"

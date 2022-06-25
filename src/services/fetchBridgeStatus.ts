@@ -1,7 +1,7 @@
 import { RequestProps, getReq } from "../api";
 
 type Props = {
-  transactionHash: string;
+  transactionHash: any;
   fromChainId: string;
   toChainId: string;
 }

@@ -49,7 +49,7 @@ const RouteInfoButton: React.FC<Props> = ({ route, index, selectedIndex, setSele
             title={bridgesByName[route.usedBridgeNames[0]].displayName}
             alt={bridgesByName[route.usedBridgeNames[0]].displayName}
           />
-          <div>{(parseInt(route.toAmount) / (10 ** outputTokenDetails.decimals)).toFixed(2).toString()}</div>
+          <div>{(parseInt(route.toAmount) / (10 ** outputTokenDetails.decimals)).toFixed(4).toString()}</div>
           <div>~{bridgeFee}</div>
           <div>${(route.totalGasFeesInUsd).toPrecision(3).toString()}</div>
           <div>{(route.serviceTime / 60).toString()} min</div>
@@ -68,7 +68,7 @@ const RouteInfoButton: React.FC<Props> = ({ route, index, selectedIndex, setSele
           </div>
           <div className="flex flex-row py-0.5 w-full text-xs">
             <div className="text-bg3 font-normal">Receive ({outputTokenDetails.symbol})</div>
-            <div className="grow text-right">{(parseInt(route.toAmount) / (10 ** outputTokenDetails.decimals)).toFixed(2).toString()}</div>
+            <div className="grow text-right">{(parseInt(route.toAmount) / (10 ** outputTokenDetails.decimals)).toFixed(4).toString()}</div>
           </div>
           <div className="flex flex-row py-0.5 w-full text-xs">
             <div className="text-bg3 font-normal">Bridge Fee</div>
@@ -76,7 +76,7 @@ const RouteInfoButton: React.FC<Props> = ({ route, index, selectedIndex, setSele
           </div>
           <div className="flex flex-row py-0.5 w-full text-xs">
             <div className="text-bg3 font-normal">Gas Fee</div>
-            <div className="grow text-right">${(route.totalGasFeesInUsd).toPrecision(3).toString()}</div>
+            <div className="grow text-right">${(route.totalGasFeesInUsd).toFixed(3).toString()}</div>
           </div>
           <div className="flex flex-row py-0.5 w-full text-xs">
             <div className="text-bg3 font-normal">Time</div>
