@@ -1,1 +1,1 @@
-export { darkTheme, lightTheme, Theme } from "./themization";
+export { darkTheme, lightTheme } from "./themization";
