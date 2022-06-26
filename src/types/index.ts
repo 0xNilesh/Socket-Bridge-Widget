@@ -1,3 +1,13 @@
+export interface Theme {
+  bgColorPrimary: string,
+  bgColorSecondary: string,
+  bgColorDropdown: string,
+  textColorPrimary: string,
+  textColorSecondary: string,
+  btnColorPrimary: string,
+  btnColorSecondary: string
+}
+
 export type Obj = {
   [key: number | string]: Object;
 }
@@ -40,7 +50,6 @@ export type useWeb3ProviderContent = {
 }
 
 export type PropsContent = {
-  width: string;
   defaultInputChainId: number;
   defaultOutputChainId: number;
 }

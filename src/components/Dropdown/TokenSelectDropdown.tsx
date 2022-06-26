@@ -132,11 +132,11 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
   useClickAway(clickAwayRef, () => onHide(true));
 
   return (
-    <div ref={clickAwayRef} className="absolute text-fc bg-bg2 top-14 py-2 rounded-lg z-10 w-full">
+    <div ref={clickAwayRef} className="absolute text-textColorPrimary bg-bgColorDropdown top-14 py-2 rounded-lg z-10 w-full">
       <div className="flex m-1 flex-col">
         <div className="w-full p-2.5">
           <input
-            className="rounded-lg bg-bgLight hover:bg-pr p-2 w-full outline-none border-none"
+            className="rounded-lg bg-bgColorSecondary hover:bg-bgColorPrimary p-2 w-full outline-none border-none"
             placeholder="Search Name or Address"
             onChange={(e) => {
               if (isAddress) setIsAddress(false);
@@ -147,7 +147,7 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
             autoFocus
           />
         </div>
-        <div className="flex flex-row my-2 text-xs text-bg3 mx-2">
+        <div className="flex flex-row my-2 text-xs text-textColorSecondary mx-2">
           <div className="grow ml-1">Token Name</div>
           <div className="mr-3">Balance</div>
         </div>
@@ -155,7 +155,7 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
           {filteredResults.map((option) => {
             return (
               <div
-                className="flex mx-2 my-3 p-1 rounded-lg h-10 items-center text-sm font-medium hover:cursor-pointer hover:bg-bgLight"
+                className="flex mx-2 my-3 p-1 rounded-lg h-10 items-center text-sm font-medium hover:cursor-pointer hover:bg-bgColorSecondary"
                 onClick={() => {
                   setTokenDetail({ address: option.address, symbol: option.symbol, icon: option.icon, decimals: option.decimals });
                   onHide(true);
@@ -165,7 +165,7 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
                 <img src={option.icon} className="w-7 h-7 rounded-full mr-2" />
                 <div className="grow">
                   <div>{option.symbol}</div>
-                  <div className="text-bg3 text-sm">{option.name}</div>
+                  <div className="text-textColorSecondary text-sm">{option.name}</div>
                 </div>
                 <div>{tokenBalance[option.address] ? tokenBalance[option.address].toFixed(4) : "0.00"}</div>
               </div>
@@ -179,7 +179,7 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
               <img src={newToken.icon} className="w-7 h-7 rounded-full mr-2" />
               <div className="grow">
                 <div>{newToken.symbol}</div>
-                <div className="text-bg3 text-sm">{newToken.name}</div>
+                <div className="text-textColorSecondary text-sm">{newToken.name}</div>
               </div>
               {account &&
                 <button
@@ -196,7 +196,7 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
             </div>
           }
           {(filteredResults.length === 0 && !newToken.address) &&
-            <div className="text-bg3 font-medium text-base mt-2 ml-3">No Tokens Found</div>
+            <div className="text-textColorSecondary font-medium text-base mt-2 ml-3">No Tokens Found</div>
           }
         </div>
       </div>

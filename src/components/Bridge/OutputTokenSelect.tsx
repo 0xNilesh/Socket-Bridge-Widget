@@ -115,10 +115,10 @@ const OutputTokenSelect: React.FC = () => {
   }
 
   return (
-    <div id="output-token-select" className="flex flex-col relative bg-bgLight rounded-lg px-3 py-2 border-2 border-bgLight">
+    <div id="output-token-select" className="flex flex-col relative bg-bgColorSecondary rounded-lg px-3 py-2 border-2 border-bgColorSecondary">
       <div className="flex flex-row">
-        <div className="text-bg3 text-xs mr-2">Receive</div>
-        <div className="grow text-bg3 text-xs text-right font-medium">
+        <div className="text-textColorSecondary text-xs mr-2">Receive</div>
+        <div className="grow text-textColorSecondary text-xs text-right font-medium">
           {price && Object.keys(selectedRoute).length !== 0 && inputTokenAmount != "" && !quoteList.isLoading &&
             <>
               <input
@@ -132,13 +132,13 @@ const OutputTokenSelect: React.FC = () => {
       </div>
       <div className="flex flex-row">
         <div
-          className="flex flex-row text-fc text-lg font-medium hover:cursor-pointer hover:text-blue-500"
+          className="flex flex-row text-textColorPrimary text-lg font-medium hover:cursor-pointer hover:text-blue-500"
           onClick={() => setHideOutputTokenDropdown(!hideOutputTokenDropdown)}
         >
           {(outputTokenDetails.address === "") &&
             <>
               {/* <img src={chainsByChainId[outputChainId].currency.icon} className="w-4 h-4 rounded-full mr-1 self-center" /> */}
-              <div className="mr-2"><LoadingSvg className="inline animate-spin -ml-1 mr-2 h-5 w-5 text-fc" /> Loading...</div>
+              <div className="mr-2"><LoadingSvg className="inline animate-spin -ml-1 mr-2 h-5 w-5 text-textColorPrimary" /> Loading...</div>
               <div className="self-center">
                 <DownArrowSvg className="rotate-90 mr-1" style={{width: 6, height: 10}} />
               </div>
@@ -154,7 +154,7 @@ const OutputTokenSelect: React.FC = () => {
             </>
           }
         </div>
-        <div className="grow text-fc">
+        <div className="grow text-textColorPrimary">
           <input
             placeholder="0"
             disabled

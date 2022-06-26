@@ -33,9 +33,9 @@ const ChainsSelect: React.FC = () => {
         swap={swap}
       />
       {widgetWidth > 450 &&
-        <div id="swap-chains" className="self-center text-fc">
+        <div id="swap-chains" className="self-center text-textColorPrimary">
           <div
-            className="flex justify-center items-center rounded-lg border-2 border-bgLight bg-pr h-7 hover:cursor-pointer hover:bg-bgLight"
+            className="flex justify-center items-center rounded-lg border-2 border-bgColorSecondary bg-bgColorPrimary h-7 hover:cursor-pointer hover:bg-bgColorSecondary"
             onClick={() => {
               setInputTokenDetails({ address: "", icon: "", symbol: "", decimals: 0 })
               setOutputTokenDetails({ address: "", icon: "", symbol: "", decimals: 0 })

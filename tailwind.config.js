@@ -3,11 +3,13 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
-				pr: "var(--bg1)",
-				bgLight: "var(--bgl)",
-				fc: "var(--fc)",
-				bg2: "#1C1D20",
-				bg3: "#9da0a6",
+				bgColorPrimary: "var(--bgColorPrimary)",
+				bgColorSecondary: "var(--bgColorSecondary)",
+				bgColorDropdown: "var(--bgColorDropdown)",
+				textColorPrimary: "var(--textColorPrimary)",
+				textColorSecondary: "var(--textColorSecondary)",
+				btnColorPrimary: "var(--btnColorPrimary)",
+				btnColorSecondary: "var(--btnColorSecondary)"
 			},
 		},
 	},

@@ -31,12 +31,12 @@ const RouteSelector: React.FC = () => {
     <div>
       <div className="flex flex-row" id="bridge-header">
         <button
-          className="w-6 h-6 rounded-md hover:bg-bgLight hover:cursor-pointer mr-2 text-fc flex justify-center items-center"
+          className="w-6 h-6 rounded-md hover:bg-bgColorSecondary hover:cursor-pointer mr-2 text-textColorPrimary flex justify-center items-center"
           onClick={() => setTabIndex(0)}
         >
           <DownArrowSvg className="rotate-180" style={{width: 9, height: 14}} />
         </button>
-        <div className="grow text-center text-xl text-fc font-medium">
+        <div className="grow text-center text-xl text-textColorPrimary font-medium">
           Bridge
         </div>
       </div>
@@ -44,7 +44,7 @@ const RouteSelector: React.FC = () => {
       <div className="h-4"></div>
       {widgetWidth > 500 &&
         <>
-          <div className="grid grid-cols-5 gap-4 px-4 text-xs text-bg3 font-normal">
+          <div className="grid grid-cols-5 gap-4 px-4 text-xs text-textColorSecondary font-normal">
             <div>Bridge</div>
             <div>Receive ({outputTokenDetails.symbol})</div>
             <div>Bridge Fee</div>
@@ -74,7 +74,8 @@ const RouteSelector: React.FC = () => {
       <div>
         <PrimaryButton
           buttonText="Save for this transfer"
-          bgColor="#296CF4"
+          bgColor={getComputedStyle(document.documentElement)
+    .getPropertyValue('--btnColorSecondary')}
           onClick={saveSelectedRoute}
         />
       </div>

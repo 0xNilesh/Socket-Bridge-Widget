@@ -1,13 +1,13 @@
 import React from "react";
 import { Widget } from "./Bridge";
-import { darkTheme, Theme } from "../config";
+import { darkTheme } from "../config";
 import { Web3Provider } from '@ethersproject/providers';
+import { Theme } from "../types";
 
 export type BridgeWidgetProps = {
   apiKey: string;
   provider?: Web3Provider;
   theme?: Theme;
-  width?: string;
   defaultInputChainId?: number;
   defaultOutputChainId?: number;
 } & typeof defaultProps;
@@ -16,7 +16,6 @@ const BridgeWidget = ({
   apiKey,
   provider,
   theme,
-  width,
   defaultInputChainId,
   defaultOutputChainId
 }: BridgeWidgetProps) => {
@@ -28,7 +27,6 @@ const BridgeWidget = ({
       apiKey={apiKey}
       theme={themeObj}
       provider={provider}
-      width={width}
       defaultInputChainId={defaultInputChainId}
       defaultOutputChainId={defaultOutputChainId}
     />

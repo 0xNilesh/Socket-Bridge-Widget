@@ -13,11 +13,11 @@ const ChainSelectDropdown = ({ options, setChain, onHide }: Props) => {
   useClickAway(clickAwayRef, () => onHide(true));
 
   return (
-    <div ref={clickAwayRef} className="absolute text-fc bg-bg2 top-14 left-4 py-2 rounded-lg z-10" style={{ width: "220px" }}>
+    <div ref={clickAwayRef} className="absolute text-textColorPrimary bg-bgColorDropdown top-14 left-4 py-2 rounded-lg z-10" style={{ width: "220px" }}>
       {options.map((option) => {
         return (
           <div
-            className="flex mx-2 p-1 rounded-lg h-10 items-center text-sm font-medium hover:cursor-pointer hover:bg-bgLight"
+            className="flex mx-2 p-1 rounded-lg h-10 items-center text-sm font-medium hover:cursor-pointer hover:bg-bgColorSecondary"
             onClick={() => {
               setChain(option.chainId);
               onHide(true);

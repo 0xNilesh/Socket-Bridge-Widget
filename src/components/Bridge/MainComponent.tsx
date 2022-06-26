@@ -76,7 +76,7 @@ const MainComponent: React.FC = () => {
         </RouteLoadingContext.Provider>
         <div className="h-3"></div>
         <div className="h-3"></div>
-        <div className="flex flex-col text-fc text-sm font-normal">
+        <div className="flex flex-col text-textColorPrimary text-sm font-normal">
           <div className="flex flex-row justify-between">
             <div>Bridge</div>
             {
@@ -88,7 +88,7 @@ const MainComponent: React.FC = () => {
                 :
               routeLoading 
                 ?
-                <LoadingSvg className="inline animate-spin -ml-1 mr-2 h-5 w-5 text-fc" />
+                <LoadingSvg className="inline animate-spin -ml-1 mr-2 h-5 w-5 text-textColorPrimary" />
                 :
                 <div className="flex flex-row">
                   <img src={bridgesByName[selectedRoute.usedBridgeNames[0]].icon} className="w-5 h-5 rounded-full mr-1 self-center" />
@@ -144,7 +144,8 @@ const MainComponent: React.FC = () => {
                 'Proceed'
               }
             `}
-            bgColor="#e4147c"
+            bgColor={getComputedStyle(document.documentElement)
+    .getPropertyValue('--btnColorPrimary')}
             disabled={
               !account ||
               routeLoading ||

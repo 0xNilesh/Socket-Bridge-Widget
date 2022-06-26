@@ -43,8 +43,8 @@ const TokensSelect: React.FC = () => {
         {account &&
           <>
             <div className="mt-1">
-              <div className="text-bg3 text-sm">
-                Balance: {tokenBalance.isLoading ? <LoadingSvg className="inline animate-spin ml-1 mr-1 h-5 w-5 text-fc text-xs" />: <>{inputTokenBalance}</>} {inputTokenDetails.symbol !== "" && <>{inputTokenDetails.symbol}</>}
+              <div className="text-textColorSecondary text-sm">
+                Balance: {tokenBalance.isLoading ? <LoadingSvg className="inline animate-spin ml-1 mr-1 h-5 w-5 text-textColorPrimary text-xs" />: <>{inputTokenBalance}</>} {inputTokenDetails.symbol !== "" && <>{inputTokenDetails.symbol}</>}
               </div>    
             </div>
           </>

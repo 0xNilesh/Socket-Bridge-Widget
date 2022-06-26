@@ -59,7 +59,6 @@ export const InputTokenBalanceContext = createContext({
 });
 
 export const PropsContext = createContext<PropsContent>({
-  width: "100%",
   defaultInputChainId: 1,
   defaultOutputChainId: 137
 });

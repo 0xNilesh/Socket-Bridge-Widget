@@ -18,7 +18,7 @@ const OutputChainSelect: React.FC<Props> = ({ chainsByChainId, toChainsList, swa
   const [hideOutputChainDropdown, setHideOutputChainDropdown] = useState(true);
 
   return (
-    <div id="output-chain-select" className="hover:bg-pr col-start-7 col-span-5 text-fc bg-bgLight px-3 py-2 relative rounded-lg border-2 border-bgLight">
+    <div id="output-chain-select" className="hover:bg-bgColorPrimary col-start-7 col-span-5 text-textColorPrimary bg-bgColorSecondary px-3 py-2 relative rounded-lg border-2 border-bgColorSecondary">
       <div className="flex flex-col">
         <div className="text-xs">To Network</div>
         <div
@@ -34,7 +34,7 @@ const OutputChainSelect: React.FC<Props> = ({ chainsByChainId, toChainsList, swa
               </div>
               :
               <div>
-                <LoadingSvg className="inline animate-spin -ml-1 mr-2 h-5 w-5 text-fc" /> Loading...
+                <LoadingSvg className="inline animate-spin -ml-1 mr-2 h-5 w-5 text-textColorPrimary" /> Loading...
               </div>
             }
           </div>

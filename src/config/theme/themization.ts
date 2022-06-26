@@ -1,17 +1,21 @@
-export interface Theme {
-  bg?: string;
-  bgLight?: string;
-  fontColor?: string;
-}
+import { Theme } from "../../types"
 
 export const darkTheme: Theme = {
-  bg: "#16161A",
-  bgLight: "#2D2C33",
-  fontColor: "#fff"
+  bgColorPrimary: "#16161A",
+  bgColorSecondary: "#2D2C33",
+  bgColorDropdown: "#1C1D20",
+  textColorPrimary: "#fff",
+  textColorSecondary: "#9da0a6",
+  btnColorPrimary: "#e4147c",
+  btnColorSecondary: "#296CF4",
 }
 
 export const lightTheme: Theme = {
-  bg: "green",
-  bgLight: "#2D2C33",
-  fontColor: "#000"
+  bgColorPrimary: "#16161A",
+  bgColorSecondary: "#2D2C33",
+  bgColorDropdown: "#1C1D20",
+  textColorPrimary: "#fff",
+  textColorSecondary: "#9da0a6",
+  btnColorPrimary: "#e4147c",
+  btnColorSecondary: "#296CF4",
 }

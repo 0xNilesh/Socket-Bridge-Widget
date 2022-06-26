@@ -256,30 +256,30 @@ const BridgeTokens = () => {
     <div>
       <div className="flex flex-row" id="bridge-header">
         <button
-          className="w-6 h-6 rounded-md hover:bg-bgLight hover:cursor-pointer mr-2 text-fc flex justify-center items-center"
+          className="w-6 h-6 rounded-md hover:bg-bgColorSecondary hover:cursor-pointer mr-2 text-textColorPrimary flex justify-center items-center"
           onClick={() => setTabIndex(0)}
         >
           <DownArrowSvg className="rotate-180" style={{ width: 9, height: 14 }} />
         </button>
-        <div className="grow text-center text-xl text-fc font-medium">
+        <div className="grow text-center text-xl text-textColorPrimary font-medium">
           Bridge
         </div>
       </div>
       <div className="h-3"></div>
       <div className="h-4"></div>
-      <div className="text-fc text-base font-medium">Bridge Info</div>
-      <div className="text-bg3 test-xs font-normal py-1">{inputAmountSimplified} on {chainsByChainId[inputChainId]["name"]} to {outputAmountSimplified} on {chainsByChainId[outputChainId]["name"]} via {bridgeName} bridge</div>
-      {loading && <div className="text-fc text-base font-medium mt-4 mb-4 py-5 text-center"><LoadingSvg className="inline animate-spin -ml-1 mr-2 h-20 w-20 text-fc" /></div>}
+      <div className="text-textColorPrimary text-base font-medium">Bridge Info</div>
+      <div className="text-textColorSecondary test-xs font-normal py-1">{inputAmountSimplified} on {chainsByChainId[inputChainId]["name"]} to {outputAmountSimplified} on {chainsByChainId[outputChainId]["name"]} via {bridgeName} bridge</div>
+      {loading && <div className="text-textColorPrimary text-base font-medium mt-4 mb-4 py-5 text-center"><LoadingSvg className="inline animate-spin -ml-1 mr-2 h-20 w-20 text-textColorPrimary" /></div>}
       {(sourceTxHash !== null && destinationTxHash === null) &&
-        <div className="text-fc text-base font-medium mt-4 mb-4 py-5 text-center">
-          <LoadingSvg className="inline animate-spin -ml-1 mr-2 h-20 w-20 text-fc" />
-          <div className="text-fc text-base font-medium pt-4">Bridging in Progress...</div>
+        <div className="text-textColorPrimary text-base font-medium mt-4 mb-4 py-5 text-center">
+          <LoadingSvg className="inline animate-spin -ml-1 mr-2 h-20 w-20 text-textColorPrimary" />
+          <div className="text-textColorPrimary text-base font-medium pt-4">Bridging in Progress...</div>
         </div>
       }
       {destinationTxHash !== null &&
         <div className="py-5 flex flex-col items-center">
           <GreenTickSvg className="h-20 w-20" />
-          <div className="text-fc text-base font-medium pt-2">Transaction completed</div>
+          <div className="text-textColorPrimary text-base font-medium pt-2">Transaction completed</div>
         </div>
       }
       {warning && <div className="mt-4 mb-4 text-base font-medium text-red-500">{warning}</div>}
@@ -288,7 +288,8 @@ const BridgeTokens = () => {
           <PrimaryButton
             buttonText={approveBtnText}
             loading={loadingApproveBtn}
-            bgColor="#e4147c"
+            bgColor={getComputedStyle(document.documentElement)
+    .getPropertyValue('--btnColorPrimary')}
             disabled={disabledApproveBtn}
             onClick={handleApprove}
           />
@@ -297,7 +298,8 @@ const BridgeTokens = () => {
           <PrimaryButton
             buttonText={bridgeBtnText}
             loading={loadingBridgeBtn}
-            bgColor="#e4147c"
+            bgColor={getComputedStyle(document.documentElement)
+    .getPropertyValue('--btnColorPrimary')}
             disabled={disabledBridgeBtn}
             onClick={handleBridge}
           />
@@ -306,13 +308,13 @@ const BridgeTokens = () => {
       {sourceTxHash !== null && chainsByChainId &&
         <div className="flex flex-row justify-around mt-3">
           <button
-            className="text-xs text-blue-500 hover:underline border rounded-3xl border-bg3 px-2.5 py-1.5 flex flex-row"
+            className="text-xs text-blue-500 hover:underline border rounded-3xl border-textColorSecondary bg-bgColorDropdown px-2.5 py-1.5 flex flex-row"
           >
             <img src={chainsByChainId[inputChainId].icon} className="w-4 h-4 rounded-full mr-1" />
             <a href={`${chainsByChainId[inputChainId].explorers[0]}/tx/${sourceTxHash}`} target="_blank">Source Tx</a>
           </button>
           <button
-            className="text-xs text-blue-500 hover:underline border disabled:pointer-events-none disabled:opacity-50 rounded-3xl border-bg3 px-2.5 py-1.5 flex flex-row"
+            className="text-xs text-blue-500 hover:underline border disabled:pointer-events-none bg-bgColorDropdown disabled:opacity-50 rounded-3xl border-textColorSecondary px-2.5 py-1.5 flex flex-row"
             disabled={destinationTxHash === null}
           >
             <img src={chainsByChainId[outputChainId].icon} className="w-4 h-4 rounded-full mr-1" />

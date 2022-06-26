@@ -7,22 +7,22 @@ const BridgeTypeSort: React.FC = () => {
 
   return (
     <div
-      className={`${widgetWidth > 250 ? 'grid grid-cols-3' : 'flex flex-col'} gap-1 py-1 px-1 bg-bgLight rounded-lg text-xs`}
+      className={`${widgetWidth > 250 ? 'grid grid-cols-3' : 'flex flex-col'} gap-1 py-1 px-1 bg-bgColorSecondary rounded-lg text-xs`}
     >
       <button
-        className={`text-fc py-1 px-1 hover:bg-bg3 rounded-lg ${sortType === "output" ? "bg-pr" : ""}`}
+        className={`text-textColorPrimary py-1 px-1 hover:bg-textColorSecondary rounded-lg ${sortType === "output" ? "bg-bgColorPrimary" : ""}`}
         onClick={() => setSortType("output")}
       >
         Max Received
       </button>
       <button
-        className={`text-fc py-1 px-1 hover:bg-bg3 rounded-lg ${sortType === "time" ? "bg-pr" : ""}`}
+        className={`text-textColorPrimary py-1 px-1 hover:bg-textColorSecondary rounded-lg ${sortType === "time" ? "bg-bgColorPrimary" : ""}`}
         onClick={() => setSortType("time")}
       >
         Fastest Transfer
       </button>
       <button
-        className={`text-fc py-1 px-1 hover:bg-bg3 rounded-lg ${sortType === "gas" ? "bg-pr" : ""}`}
+        className={`text-textColorPrimary py-1 px-1 hover:bg-textColorSecondary rounded-lg ${sortType === "gas" ? "bg-bgColorPrimary" : ""}`}
         onClick={() => setSortType("gas")}
       >
         Least Gas

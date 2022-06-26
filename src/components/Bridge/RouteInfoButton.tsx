@@ -37,7 +37,7 @@ const RouteInfoButton: React.FC<Props> = ({ route, index, selectedIndex, setSele
 
   return (
     <button
-      className={`${widgetWidth > 500 ? 'grid grid-cols-5 gap-4' : 'flex flex-col'} px-3 py-3 rounded-lg hover:cursor-pointer w-full text-left text-sm text-fc font-normal border ${index == selectedIndex ? "border-blue-500" : "border-bgLight"}`}
+      className={`${widgetWidth > 500 ? 'grid grid-cols-5 gap-4' : 'flex flex-col'} px-3 py-3 rounded-lg hover:cursor-pointer w-full text-left text-sm text-textColorPrimary font-normal border ${index == selectedIndex ? "border-blue-500" : "border-bgColorSecondary"}`}
       onClick={() => setSelectedIndex(index)}
     >
       {widgetWidth > 500
@@ -67,19 +67,19 @@ const RouteInfoButton: React.FC<Props> = ({ route, index, selectedIndex, setSele
             <div></div>
           </div>
           <div className="flex flex-row py-0.5 w-full text-xs">
-            <div className="text-bg3 font-normal">Receive ({outputTokenDetails.symbol})</div>
+            <div className="text-textColorSecondary font-normal">Receive ({outputTokenDetails.symbol})</div>
             <div className="grow text-right">{(parseInt(route.toAmount) / (10 ** outputTokenDetails.decimals)).toFixed(4).toString()}</div>
           </div>
           <div className="flex flex-row py-0.5 w-full text-xs">
-            <div className="text-bg3 font-normal">Bridge Fee</div>
+            <div className="text-textColorSecondary font-normal">Bridge Fee</div>
             <div className="grow text-right">~{bridgeFee}</div>
           </div>
           <div className="flex flex-row py-0.5 w-full text-xs">
-            <div className="text-bg3 font-normal">Gas Fee</div>
+            <div className="text-textColorSecondary font-normal">Gas Fee</div>
             <div className="grow text-right">${(route.totalGasFeesInUsd).toFixed(4).toString()}</div>
           </div>
           <div className="flex flex-row py-0.5 w-full text-xs">
-            <div className="text-bg3 font-normal">Time</div>
+            <div className="text-textColorSecondary font-normal">Time</div>
             <div className="grow text-right">{(route.serviceTime / 60).toString()} min</div>
           </div>
         </>

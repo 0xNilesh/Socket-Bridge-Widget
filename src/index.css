@@ -3,7 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --bg1: #D12188;
-  --bgl: #2D2C33;
-  --fc: #fff;
+  --bgColorPrimary: #16161A;
+  --bgColorSecondary: #2D2C33;
+  --bgColorDropdown: #1C1D20;
+  --textColorPrimary: #fff;
+  --textColorSecondary: #9da0a6;
+  --btnColorPrimary: #e4147c;
+  --btnColorSecondary: #296CF4;
 }
