@@ -2,6 +2,16 @@
   "name": "socket-bridge-widget",
   "version": "0.1.0",
   "description": "A modular bridge widget powered by Socket",
+  "repository": {
+      "type": "git",
+      "url" : "https://github.com/nilesh46/Socket-Bridge-Widget"
+  },
+  "keywords": [
+      "socket",
+      "bridge",
+      "bridge widget",
+      "bungee"
+  ],
   "scripts": {
     "rollup": "rollup -c",
     "start": "rollup -c -w",
