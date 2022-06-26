@@ -167,7 +167,7 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
                   <div>{option.symbol}</div>
                   <div className="text-bg3 text-sm">{option.name}</div>
                 </div>
-                <div>{tokenBalance[option.address] ? tokenBalance[option.address].toFixed(3) : "0.00"}</div>
+                <div>{tokenBalance[option.address] ? tokenBalance[option.address].toFixed(4) : "0.00"}</div>
               </div>
             );
           })}

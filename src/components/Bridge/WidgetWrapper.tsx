@@ -106,7 +106,7 @@ const WidgetWrapper = () => {
                     <SortTypeContext.Provider value={{ sortType, setSortType }}>
                       <WidgetWidthContext.Provider value={{widgetWidth}}>
                         <div
-                          style={{ width: '100%', marginTop: "50px" }}
+                          style={{ width: '100%' }}
                           className="rounded-xl bg-pr p-6"
                           ref={ref}
                         >

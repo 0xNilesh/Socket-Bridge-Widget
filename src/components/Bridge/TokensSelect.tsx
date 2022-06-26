@@ -32,7 +32,7 @@ const TokensSelect: React.FC = () => {
     if (tokenBalance.isSuccess) {
       let balance = tokenBalance.data?.data?.result.balance;
       let decimals = tokenBalance.data?.data?.result.decimals;
-      let inputBalance = (balance / (10 ** decimals)).toFixed(3).toString();
+      let inputBalance = (balance / (10 ** decimals)).toFixed(4).toString();
       setInputTokenBalance(inputBalance);
     }
   }, [tokenBalance.isLoading, inputChainId, inputTokenDetails]);

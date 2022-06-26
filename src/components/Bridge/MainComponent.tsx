@@ -53,7 +53,7 @@ const MainComponent: React.FC = () => {
     })
 
     let fees = "";
-    fees = (parseInt(bridgeStep.protocolFees.amount) / 10 ** (bridgeStep.protocolFees.asset.decimals)).toFixed(2).toString();
+    fees = (parseInt(bridgeStep.protocolFees.amount) / 10 ** (bridgeStep.protocolFees.asset.decimals)).toFixed(4).toString();
     fees += " " + bridgeStep.protocolFees.asset.symbol;
     fees += " ($" + (bridgeStep.protocolFees.feesInUsd).toString() + ")";
 
@@ -125,7 +125,7 @@ const MainComponent: React.FC = () => {
             {
               (isNotValid || routeLoading) 
                 ? <div>—</div>
-                : <div>~ ${ (selectedRoute.totalGasFeesInUsd).toFixed(2).toString() }</div>
+                : <div>~ ${ (selectedRoute.totalGasFeesInUsd).toFixed(4).toString() }</div>
             }
           </div>
         </div>

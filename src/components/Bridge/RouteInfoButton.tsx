@@ -76,7 +76,7 @@ const RouteInfoButton: React.FC<Props> = ({ route, index, selectedIndex, setSele
           </div>
           <div className="flex flex-row py-0.5 w-full text-xs">
             <div className="text-bg3 font-normal">Gas Fee</div>
-            <div className="grow text-right">${(route.totalGasFeesInUsd).toFixed(3).toString()}</div>
+            <div className="grow text-right">${(route.totalGasFeesInUsd).toFixed(4).toString()}</div>
           </div>
           <div className="flex flex-row py-0.5 w-full text-xs">
             <div className="text-bg3 font-normal">Time</div>

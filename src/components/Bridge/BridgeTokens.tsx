@@ -39,8 +39,8 @@ const BridgeTokens = () => {
 
   const isFirstMount = useRef(true);
 
-  const inputAmountSimplified = (parseFloat(selectedRoute.fromAmount) / (10 ** inputTokenDetails.decimals)).toFixed(2).toString() + " " + inputTokenDetails.symbol;
-  const outputAmountSimplified = (parseFloat(selectedRoute.toAmount) / (10 ** outputTokenDetails.decimals)).toFixed(2).toString() + " " + outputTokenDetails.symbol;
+  const inputAmountSimplified = (parseFloat(selectedRoute.fromAmount) / (10 ** inputTokenDetails.decimals)).toFixed(4).toString() + " " + inputTokenDetails.symbol;
+  const outputAmountSimplified = (parseFloat(selectedRoute.toAmount) / (10 ** outputTokenDetails.decimals)).toFixed(4).toString() + " " + outputTokenDetails.symbol;
   const bridgeName = bridgesByName[selectedRoute.usedBridgeNames[0]].displayName;
 
   allowanceAmount = useQuery(["checkAllowance"],
@@ -50,7 +50,7 @@ const BridgeTokens = () => {
       allowanceTarget: allowanceTarget,
       tokenAddress: inputTokenDetails.address
     }), {
-      enabled: !!(allowanceTarget !== null)
+      enabled: !!(allowanceTarget !== null && sourceTxHash === null)
     }
   );
 
@@ -60,7 +60,7 @@ const BridgeTokens = () => {
       fromChainId: inputChainId.toString(),
       toChainId: outputChainId.toString()
     }), {
-      enabled: !!(sourceTxHash !== null && destinationTxHash === null),
+      enabled: !!(sourceTxHash !== null && destinationTxHash == null),
       refetchInterval: 20000
     }
   );
@@ -83,13 +83,14 @@ const BridgeTokens = () => {
   );
 
   useEffect(() => {
-    if (bridgeStatus.isSuccess && destinationTxHash === null) {
-      const response:any = bridgeStatus.data?.data?.result;
-      if (response.destinationTransactionHash && response.destinationTxStatus === "COMPLETED") {
+    if (bridgeStatus.isSuccess) {
+      const response: any = bridgeStatus.data?.data?.result;
+      console.log(response);
+      if (response.destinationTransactionHash != null && response.destinationTxStatus == "COMPLETED") {
         setDestinationTxHash(response.destinationTransactionHash);
       }
     }
-  }, [bridgeStatus.isSuccess, destinationTxHash])
+  }, [bridgeStatus.isSuccess, destinationTxHash]);
 
   useEffect(() => {
     if (allowanceAmount.isSuccess) {
@@ -112,6 +113,19 @@ const BridgeTokens = () => {
       isFirstMount.current = false;
     }
   }, [isFirstMount]);
+
+  const gasLimitFromRoute = () => {
+    if (Object.keys(selectedRoute).length === 0) return;
+    let userBridgeTx = {} as any;
+    selectedRoute.userTxs.map((userTx: any) => {
+      if (userTx.userTxType === "fund-movr") {
+        userBridgeTx = userTx;
+      }
+    });
+
+    let gasLimit = userBridgeTx.gasFees.gasLimit;
+    return gasLimit;
+  }
 
   const handleApprove = async () => {
     if (!minimumApprovalAmount) return;
@@ -193,16 +207,19 @@ const BridgeTokens = () => {
       
       const gasPrice = await signer.getGasPrice();
 
-      const gasEstimate = await w3Provider.estimateGas({
-          from: signer.address,
-          to: apiTxData.txTarget,
-          value: apiTxData.value,
-          data: apiTxData.txData,
-          gasPrice: gasPrice
-      });
+      // const gasEstimate = await w3Provider.estimateGas({
+      //   from: signer._address,
+      //   to: apiTxData.txTarget,
+      //   value: apiTxData.value,
+      //   data: apiTxData.txData,
+      //   gasPrice: gasPrice
+      // });
+
+      const gasEstimate = gasLimitFromRoute() + 1000;
+      console.log(gasEstimate);
 
       const tx = await signer.sendTransaction({
-          from: signer.address,
+          from: signer._address,
           to: apiTxData.txTarget,
           data: apiTxData.txData,
           value: apiTxData.value,
@@ -252,7 +269,13 @@ const BridgeTokens = () => {
       <div className="h-4"></div>
       <div className="text-fc text-base font-medium">Bridge Info</div>
       <div className="text-bg3 test-xs font-normal py-1">{inputAmountSimplified} on {chainsByChainId[inputChainId]["name"]} to {outputAmountSimplified} on {chainsByChainId[outputChainId]["name"]} via {bridgeName} bridge</div>
-      {(loading || (sourceTxHash !== null && destinationTxHash === null)) && <div className="text-fc text-base font-medium mt-4 mb-4 py-5 text-center"><LoadingSvg className="inline animate-spin -ml-1 mr-2 h-20 w-20 text-fc" /></div>}
+      {loading && <div className="text-fc text-base font-medium mt-4 mb-4 py-5 text-center"><LoadingSvg className="inline animate-spin -ml-1 mr-2 h-20 w-20 text-fc" /></div>}
+      {(sourceTxHash !== null && destinationTxHash === null) &&
+        <div className="text-fc text-base font-medium mt-4 mb-4 py-5 text-center">
+          <LoadingSvg className="inline animate-spin -ml-1 mr-2 h-20 w-20 text-fc" />
+          <div className="text-fc text-base font-medium pt-4">Bridging in Progress...</div>
+        </div>
+      }
       {destinationTxHash !== null &&
         <div className="py-5 flex flex-col items-center">
           <GreenTickSvg className="h-20 w-20" />
@@ -283,14 +306,16 @@ const BridgeTokens = () => {
       {sourceTxHash !== null && chainsByChainId &&
         <div className="flex flex-row justify-around mt-3">
           <button
-            className="text-xs text-blue-500 hover:underline border rounded-3xl border-bg3 px-2.5 py-1.5"
+            className="text-xs text-blue-500 hover:underline border rounded-3xl border-bg3 px-2.5 py-1.5 flex flex-row"
           >
+            <img src={chainsByChainId[inputChainId].icon} className="w-4 h-4 rounded-full mr-1" />
             <a href={`${chainsByChainId[inputChainId].explorers[0]}/tx/${sourceTxHash}`} target="_blank">Source Tx</a>
           </button>
           <button
-            className="text-xs text-blue-500 hover:underline border disabled:pointer-events-none disabled:opacity-50 rounded-3xl border-bg3 px-2.5 py-1.5"
+            className="text-xs text-blue-500 hover:underline border disabled:pointer-events-none disabled:opacity-50 rounded-3xl border-bg3 px-2.5 py-1.5 flex flex-row"
             disabled={destinationTxHash === null}
           >
+            <img src={chainsByChainId[outputChainId].icon} className="w-4 h-4 rounded-full mr-1" />
             <a href={`${chainsByChainId[outputChainId].explorers[0]}/tx/${destinationTxHash}`} target="_blank">Destination Tx</a>
           </button>
         </div>
