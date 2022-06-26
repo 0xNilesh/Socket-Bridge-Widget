@@ -71,7 +71,6 @@ const BridgeTokens = () => {
           setLoading(false);
           setApiTxData(data.data?.result);
           const { allowanceTarget, minimumApprovalAmount } = data.data.result.approvalData;
-          console.log(allowanceTarget, minimumApprovalAmount);
           setMinimumApprovalAmount(minimumApprovalAmount);
           if (allowanceTarget === null) {
             setHideBridgeBtn(false);
@@ -85,7 +84,6 @@ const BridgeTokens = () => {
   useEffect(() => {
     if (bridgeStatus.isSuccess) {
       const response: any = bridgeStatus.data?.data?.result;
-      console.log(response);
       if (response.destinationTransactionHash != null && response.destinationTxStatus == "COMPLETED") {
         setDestinationTxHash(response.destinationTransactionHash);
       }
@@ -102,7 +100,6 @@ const BridgeTokens = () => {
       } else if(minimumApprovalAmount != null && parseInt(minimumApprovalAmount) <= allowanceValue) {
         setHideBridgeBtn(false);
       }
-      console.log(allowanceValue);
     }
   }, [allowanceAmount.isSuccess]);
 
@@ -142,19 +139,8 @@ const BridgeTokens = () => {
         tokenAddress: inputTokenDetails.address,
         amount: minimumApprovalAmount
       });
-      console.log(approvalTransactionData);
-      console.log(signer);
 
       const gasPrice = await signer.getGasPrice();
-      console.log(gasPrice);
-
-      console.log({
-        from: signer._address,
-        to: approvalTransactionData.data?.result?.to,
-        value: '0x00',
-        data: approvalTransactionData.data?.result?.data,
-        gasPrice: gasPrice
-      });
 
       const gasEstimate = await w3Provider.estimateGas({
           from: signer._address,
@@ -164,8 +150,6 @@ const BridgeTokens = () => {
           gasPrice: gasPrice
       });
 
-      console.log(gasEstimate);
-
       const tx = await signer.sendTransaction({
           from: approvalTransactionData.data?.result?.from,
           to: approvalTransactionData.data?.result?.to,
@@ -174,7 +158,6 @@ const BridgeTokens = () => {
           gasPrice: gasPrice,
           gasLimit: gasEstimate
       });
-      console.log(tx);
 
       // Initiates approval transaction on user's frontend which user has to sign
       const receipt = await tx.wait();
@@ -207,16 +190,7 @@ const BridgeTokens = () => {
       
       const gasPrice = await signer.getGasPrice();
 
-      // const gasEstimate = await w3Provider.estimateGas({
-      //   from: signer._address,
-      //   to: apiTxData.txTarget,
-      //   value: apiTxData.value,
-      //   data: apiTxData.txData,
-      //   gasPrice: gasPrice
-      // });
-
       const gasEstimate = gasLimitFromRoute() + 1000;
-      console.log(gasEstimate);
 
       const tx = await signer.sendTransaction({
           from: signer._address,

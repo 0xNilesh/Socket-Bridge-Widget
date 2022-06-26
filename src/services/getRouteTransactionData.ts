@@ -11,12 +11,11 @@ const getRouteTransactionData = ({ route }: Props) => {
     body: {"route": route}
   }
   const response: any = postReq(obj);
-  // console.log(response);
   
   if (!response) {
     throw new Error("Problem fetching route transaction data");
   }
-  // console.log(response.data)
+  
   return response;
 }
 

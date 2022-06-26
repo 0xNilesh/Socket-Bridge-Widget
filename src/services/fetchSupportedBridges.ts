@@ -5,7 +5,6 @@ const getSupportedBridges = () => {
     path: '/supported/bridges'
   }
   const response = getReq(obj);
-  // console.log(response);
   
   if (!response) {
     throw new Error("Problem fetching supported bridges");

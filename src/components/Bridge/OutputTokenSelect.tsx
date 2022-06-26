@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { ChainIdContext, InputTokenAmountContext, RoutesContext, SortTypeContext, TokenDetailsContext, useWeb3Context } from "../../contexts";
+import { ChainIdContext, InputTokenAmountContext, RouteLoadingContext, RoutesContext, SortTypeContext, TokenDetailsContext, useWeb3Context, WarningMsgContext } from "../../contexts";
 import { TokenSelectDropdown } from "../Dropdown";
 import LoadingSvg from "../../assets/loading.svg";
 import DownArrowSvg from "../../assets/down-arrow.svg";
@@ -10,7 +10,6 @@ import { isValidInput } from "../../helpers";
 
 import debounce from "lodash.debounce";
 import { useIsMount } from "../../hooks";
-import { RouteLoadingContext, WarningMsgContext } from "./MainComponent";
 let DEBOUNCE_TIMEOUT = 1000;
 
 let price: any;
@@ -68,7 +67,6 @@ const OutputTokenSelect: React.FC = () => {
 
   useEffect(() => {
     if (isMount) return;
-    // console.log(" called now", quoteList);
     if (quoteList.isLoading) {
       setRouteLoading(true);
     }
@@ -79,7 +77,6 @@ const OutputTokenSelect: React.FC = () => {
         else setSelectedRoute(response?.routes[response?.routes.length-1]);
         setRoutes(response?.routes);
       } else {
-        console.log("Not found");
         setWarningMsg('No bridges support this trade. Try bigger amount.');
         setSelectedRoute({});
         setRoutes([]);
@@ -101,7 +98,6 @@ const OutputTokenSelect: React.FC = () => {
   // debounce to reduce API calls while typing
   useEffect(() => {
     if (isMount) return;
-    // console.log("hello debounce");
     if (!isValidInput.test(inputTokenAmount) || inputTokenAmount == "") {
       return;
     }

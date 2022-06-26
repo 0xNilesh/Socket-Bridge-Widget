@@ -16,23 +16,11 @@ const WidgetWrapper = () => {
   const widgetProps = useContext(PropsContext);
   const ref = useRef(null);
 
-  // const gasPrice = useQuery(
-  //   ["gasPrice"],
-  //   () => getGasPriceByChainId(
-  //     {
-  //       chainId: '1'
-  //     }
-  //   )
-  // );
-
   const bridgesResponse = useQuery(["bridges"], getSupportedBridges);
   const [bridgesByName] = getBridgeDataByBridgeName(bridgesResponse);
   
   const chainsResponse = useQuery(["chains"], getSupportedChains);
   const [chainsByChainId, fromChainsList, toChainsList] = getChainDataByChainId(chainsResponse);
-
-  // if (gasPrice.isLoading) console.log("Loading...gasPrice");
-  // else console.log('gasPrice', gasPrice.data);
 
   const [tabIndex, setTabIndex] = useState(0);
   const [inputChainId, setInputChainId] = useState((widgetProps as any).defaultInputChainId);
@@ -45,8 +33,6 @@ const WidgetWrapper = () => {
   const [sortType, setSortType] = useState("output" as any);
   const { account } = useContext(useWeb3Context);
   const widgetWidth = useBoxWidth(ref);
-
-  // console.log(widgetWidth);
 
   const fromTokenList: queryResponseObj = useQuery(
     ["fromTokenList", inputChainId],
@@ -79,7 +65,6 @@ const WidgetWrapper = () => {
     if (fromTokenList.isSuccess) {
       inputTokenList = fromTokenList.data?.data?.result;
       const { address, icon, symbol, decimals } = inputTokenList.filter((token: any) => (token.symbol === 'USDC'))[0];
-      // console.log(address, icon, symbol);
       setInputTokenDetails({ address, icon, symbol, decimals });
       inputTokenList = updateTokenList(inputChainId, inputTokenList, account);
     }

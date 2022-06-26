@@ -93,7 +93,6 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
 
   const handleSearch = (searchQuery: string) => {
     const result: any = [];
-    // console.log(isAddress);
     moreOptions.map(option => {
       if (option.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
         option.address.toLowerCase().includes(searchQuery.toLowerCase())
@@ -102,7 +101,6 @@ const TokenSelectDropdown = ({ options, setTokenDetail, onHide, chainId }: Props
       }
     });
     setFilteredResults(result);
-    // console.log(result);
 
     if (result.length === 0) {
       if (ethers.utils.isAddress(searchQuery)) {

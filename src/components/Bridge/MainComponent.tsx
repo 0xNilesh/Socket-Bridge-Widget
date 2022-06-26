@@ -1,21 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { BridgesContext, ChainIdContext, ChainsContext, InputTokenAmountContext, InputTokenBalanceContext, RoutesContext, TabIndexContext, useWeb3Context } from "../../contexts";
+import { BridgesContext, ChainIdContext, ChainsContext, InputTokenAmountContext, InputTokenBalanceContext, RouteLoadingContext, RoutesContext, TabIndexContext, useWeb3Context, WarningMsgContext } from "../../contexts";
 import { isValidInput } from "../../helpers";
 import { PrimaryButton } from "../Button";
 import BridgeTypeSort from "./BridgeTypeSort";
 import ChainsSelect from "./ChainsSelect";
 import TokensSelect from "./TokensSelect";
 import LoadingSvg from "../../assets/loading.svg";
-
-export const RouteLoadingContext = createContext({
-  routeLoading: false,
-  setRouteLoading: (value: boolean) => { }
-});
-
-export const WarningMsgContext = createContext({
-  warningMsg: "",
-  setWarningMsg: (msg: string) => { }
-});
 
 const MainComponent: React.FC = () => {
   const { selectedRoute } = useContext(RoutesContext);
@@ -28,14 +18,10 @@ const MainComponent: React.FC = () => {
   const [bridgeFee, setBridgeFee] = useState("");
   const [routeLoading, setRouteLoading] = useState(false);
   const [warningMsg, setWarningMsg] = useState('');
-
-  console.log(warningMsg);
   
   const [inputTokenBalance, setInputTokenBalance] = useState("");
 
   let isNotValid = Object.keys(selectedRoute).length === 0 || inputTokenAmount === "" || !isValidInput.test(inputTokenAmount);
-
-  // console.log("hello", selectedRoute);
 
   useEffect(() => {
     if (Object.keys(selectedRoute).length === 0) return;

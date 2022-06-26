@@ -69,3 +69,13 @@ export const useWeb3Context = createContext<useWeb3ProviderContent>({
   signer: {},
   w3Provider: {}
 });
+
+export const RouteLoadingContext = createContext({
+  routeLoading: false,
+  setRouteLoading: (value: boolean) => { }
+});
+
+export const WarningMsgContext = createContext({
+  warningMsg: "",
+  setWarningMsg: (msg: string) => { }
+});

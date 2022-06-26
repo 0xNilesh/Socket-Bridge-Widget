@@ -25,8 +25,6 @@ const RouteSelector: React.FC = () => {
     setTabIndex(0);
   }
 
-  // console.log(selectedRoute);
-
   return (
     <div>
       <div className="flex flex-row" id="bridge-header">
