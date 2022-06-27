@@ -8,7 +8,8 @@ The `socket-bridge-widget` package is an [npm package](https://www.npmjs.com/pac
 
 The Bridge Widget bundles the whole bridging experience into a single React component that developers can easily embed in their dapp with a single line of code. 
 
-![Bridge widget screenshot](![image](https://user-images.githubusercontent.com/54444545/175856236-01d8e45c-f462-4080-ba3b-27e7fb241fae.png))
+ ![Bridge widget screenshot](https://user-images.githubusercontent.com/54444545/175857101-c0140419-02dc-478b-991b-daddc2b2366f.png)
+
 
 Theme can be customised to match the style of your application. You can also add default input chain and default output chain for the first view of bridge.
 
