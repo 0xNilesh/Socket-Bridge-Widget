@@ -1,6 +1,6 @@
 # Socket Bridge Widget
 
-[![npm](https://img.shields.io/npm/v/nilesh46/socket-bridge-widget)](https://www.npmjs.com/package/socket-bridge-widget)
+[![npm](https://img.shields.io/npm/v/socket-bridge-widget)](https://www.npmjs.com/package/socket-bridge-widget)
 
 The `socket-bridge-widget` package is an [npm package](https://www.npmjs.com/package/socket-bridge-widget) of React component of Bridge Widget powered by [Socket protocol](https://socket.tech/)
 
