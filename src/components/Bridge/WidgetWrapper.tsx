@@ -92,7 +92,7 @@ const WidgetWrapper = () => {
                       <WidgetWidthContext.Provider value={{widgetWidth}}>
                         <div
                           style={{ width: '100%' }}
-                          className="rounded-xl bg-bgColorPrimary p-6"
+                          className="rounded-xl bg-bgColorPrimary p-6 border-2 border-bgColorSecondary"
                           ref={ref}
                         >
                           {tabIndex === 0 && <MainComponent />}
